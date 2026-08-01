@@ -1,0 +1,101 @@
+paper_id,archive_category,table_figure,claim,value_script,value_paper,match,value_rewrite,match_rewrite,notes
+schwarz_coppock_2022,2,table_1,n_studies,67,67,1,67,1,Article title and text: 67 candidate choice experiments
+schwarz_coppock_2022,2,table_1,n_subjects_total,120601,120601,1,120601,1,Table 1 Total row
+schwarz_coppock_2022,2,table_1,n_ratings_total,774971,774971,1,774971,1,Table 1 Total row
+schwarz_coppock_2022,2,table_1,n_have_data,48,NA,NA,48,NA,"The published Total row prints only subjects and ratings, not the raw-data count"
+schwarz_coppock_2022,2,figure_1,re_meta_estimate_pp,1.8421458705235139,1.8,1,1.842145870523515,1,Figure 1 summary label 1.8 (0.4); text gives 1.8 percentage points
+schwarz_coppock_2022,2,figure_1,re_meta_se_pp,0.354595479723342,0.4,1,0.354595479723342,1,Figure 1 summary label 1.8 (0.4)
+schwarz_coppock_2022,2,figure_1,re_meta_ci_low_pp,1.14715150118506,1.1,1,1.147151501185061,1,Text: confidence interval stretching from 1.1 to 2.5 points
+schwarz_coppock_2022,2,figure_1,re_meta_ci_high_pp,2.537140239861967,2.5,1,2.537140239861968,1,Text: confidence interval stretching from 1.1 to 2.5 points
+schwarz_coppock_2022,2,figure_1,n_studies,67,67,1,67,1,Figure 1 caption: results of 67 candidate choice experiments
+schwarz_coppock_2022,2,text,n_positive,47,47,1,47,1,Text: 47 estimates are positive
+schwarz_coppock_2022,2,text,n_negative,19,18,0,19,0,"Text: 18 are negative. The deposit has 19 negative, one exactly zero and 47 positive, which sums to 67; the published 47 plus 18 sums to 65"
+schwarz_coppock_2022,2,text,n_exactly_zero,1,1,1,1,1,"Text: a third comes in precisely at 0.0 (Horiuchi, Smith, and Yamamoto)"
+schwarz_coppock_2022,2,text,n_pos_and_sig_ci_rule,29,23,0,29,0,"Text: 47 estimates are positive (23 significant). The archive script's rule, a confidence interval excluding zero, gives 29"
+schwarz_coppock_2022,2,text,n_neg_and_sig_ci_rule,6,11,0,6,0,Text: 18 are negative (11 significant). The archive script's rule gives 6
+schwarz_coppock_2022,2,text,n_pos_and_sig_p05_rule,19,NA,NA,19,NA,"Not a published quantity. Recorded because the p below 0.05 rule is the other reading of the parenthetical, and it gives 19 rather than the published 23; 19 of the 67 rows carry no p-value at all"
+schwarz_coppock_2022,2,text,n_neg_and_sig_p05_rule,2,NA,NA,2,NA,Not a published quantity. The p below 0.05 rule gives 2 rather than the published 11
+schwarz_coppock_2022,2,text,prop_positive,0.7014925373134329,0.75,0,0.7014925373134329,0,"Discussion states more than three-fourths of the studies show a positive effect. value_paper records that lower bound rather than an equality; 47 of 67 is 0.701, so the claim does not hold"
+schwarz_coppock_2022,2,table_2,post_2014_studies_estimate,0.02076852592631652,0.021,1,0.02076852592631653,1,Table 2 row: Post-2014 studies
+schwarz_coppock_2022,2,table_2,post_2014_studies_std_error,0.00353901936870558,0.004,1,0.00353901936870559,1,Table 2 row: Post-2014 studies
+schwarz_coppock_2022,2,table_2,post_2014_studies_conf_low,0.01383217542306389,0.014,1,0.0138321754230639,1,Table 2 row: Post-2014 studies
+schwarz_coppock_2022,2,table_2,post_2014_studies_conf_high,0.02770487642956915,0.028,1,0.02770487642956917,1,Table 2 row: Post-2014 studies
+schwarz_coppock_2022,2,table_2,post_2014_studies_n_studies,63,63,1,63,1,Table 2 row: Post-2014 studies
+schwarz_coppock_2022,2,table_2,pre_1998_studies_estimate,-0.04670204241768256,-0.047,1,-0.04670204241768255,1,Table 2 row: Pre-1998 studies
+schwarz_coppock_2022,2,table_2,pre_1998_studies_std_error,0.03660122845561661,0.037,1,0.0366012284556166,1,Table 2 row: Pre-1998 studies
+schwarz_coppock_2022,2,table_2,pre_1998_studies_conf_low,-0.11843913198061368,-0.118,1,-0.11843913198061368,1,Table 2 row: Pre-1998 studies
+schwarz_coppock_2022,2,table_2,pre_1998_studies_conf_high,0.02503504714524856,0.025,1,0.02503504714524856,1,Table 2 row: Pre-1998 studies
+schwarz_coppock_2022,2,table_2,pre_1998_studies_n_studies,4,4,1,4,1,Table 2 row: Pre-1998 studies
+schwarz_coppock_2022,2,table_2,convenience_student_sample_estimate,0.02297025791106249,0.023,1,0.02297025791106249,1,Table 2 row: Convenience/student sample
+schwarz_coppock_2022,2,table_2,convenience_student_sample_std_error,0.00566850898752522,0.006,1,0.00566850898752521,1,Table 2 row: Convenience/student sample
+schwarz_coppock_2022,2,table_2,convenience_student_sample_conf_low,0.01186018444947145,0.012,1,0.01186018444947146,1,Table 2 row: Convenience/student sample
+schwarz_coppock_2022,2,table_2,convenience_student_sample_conf_high,0.03408033137265354,0.034,1,0.03408033137265353,1,Table 2 row: Convenience/student sample
+schwarz_coppock_2022,2,table_2,convenience_student_sample_n_studies,31,31,1,31,1,Table 2 row: Convenience/student sample
+schwarz_coppock_2022,2,table_2,representative_sample_estimate,0.01493099437674829,0.015,1,0.01493099437674828,1,Table 2 row: Representative sample
+schwarz_coppock_2022,2,table_2,representative_sample_std_error,0.00538611304870334,0.005,1,0.00538611304870334,1,Table 2 row: Representative sample
+schwarz_coppock_2022,2,table_2,representative_sample_conf_low,0.00437440678462851,0.004,1,0.00437440678462851,1,Table 2 row: Representative sample
+schwarz_coppock_2022,2,table_2,representative_sample_conf_high,0.02548758196886806,0.025,1,0.02548758196886806,1,Table 2 row: Representative sample
+schwarz_coppock_2022,2,table_2,representative_sample_n_studies,36,36,1,36,1,Table 2 row: Representative sample
+schwarz_coppock_2022,2,table_2,american_sample_estimate,0.02316935766935101,0.023,1,0.02316935766935102,1,Table 2 row: American sample
+schwarz_coppock_2022,2,table_2,american_sample_std_error,0.00606511531362025,0.006,1,0.00606511531362025,1,Table 2 row: American sample
+schwarz_coppock_2022,2,table_2,american_sample_conf_low,0.01128195009257296,0.011,1,0.01128195009257297,1,Table 2 row: American sample
+schwarz_coppock_2022,2,table_2,american_sample_conf_high,0.03505676524612906,0.035,1,0.03505676524612908,1,Table 2 row: American sample
+schwarz_coppock_2022,2,table_2,american_sample_n_studies,35,35,1,35,1,Table 2 row: American sample
+schwarz_coppock_2022,2,table_2,non_american_sample_estimate,0.01374151072947667,0.014,1,0.01374151072947667,1,Table 2 row: Non-American sample
+schwarz_coppock_2022,2,table_2,non_american_sample_std_error,0.00484683076012992,0.005,1,0.00484683076012992,1,Table 2 row: Non-American sample
+schwarz_coppock_2022,2,table_2,non_american_sample_conf_low,0.00424189700046112,0.004,1,0.00424189700046112,1,Table 2 row: Non-American sample
+schwarz_coppock_2022,2,table_2,non_american_sample_conf_high,0.02324112445849222,0.023,1,0.02324112445849222,1,Table 2 row: Non-American sample
+schwarz_coppock_2022,2,table_2,non_american_sample_n_studies,32,32,1,32,1,Table 2 row: Non-American sample
+schwarz_coppock_2022,2,table_2,trimmed_middle_90_of_estimates_estimate,0.01760270448260373,0.018,1,0.01760270448260372,1,Table 2 row: Trimmed (middle 90% of estimates)
+schwarz_coppock_2022,2,table_2,trimmed_middle_90_of_estimates_std_error,0.00296095651140167,0.003,1,0.00296095651140167,1,Table 2 row: Trimmed (middle 90% of estimates)
+schwarz_coppock_2022,2,table_2,trimmed_middle_90_of_estimates_conf_low,0.01179933636046708,0.012,1,0.01179933636046707,1,Table 2 row: Trimmed (middle 90% of estimates)
+schwarz_coppock_2022,2,table_2,trimmed_middle_90_of_estimates_conf_high,0.02340607260474038,0.023,1,0.02340607260474037,1,Table 2 row: Trimmed (middle 90% of estimates)
+schwarz_coppock_2022,2,table_2,trimmed_middle_90_of_estimates_n_studies,61,61,1,61,1,Table 2 row: Trimmed (middle 90% of estimates)
+schwarz_coppock_2022,2,table_2,all_studies_estimate,0.01842145870523514,0.018,1,0.01842145870523515,1,Table 2 row: All studies
+schwarz_coppock_2022,2,table_2,all_studies_std_error,0.00354595479723342,0.004,1,0.00354595479723342,1,Table 2 row: All studies
+schwarz_coppock_2022,2,table_2,all_studies_conf_low,0.0114715150118506,0.011,1,0.01147151501185061,1,Table 2 row: All studies
+schwarz_coppock_2022,2,table_2,all_studies_conf_high,0.02537140239861967,0.025,1,0.02537140239861968,1,Table 2 row: All studies
+schwarz_coppock_2022,2,table_2,all_studies_n_studies,67,67,1,67,1,Table 2 row: All studies
+schwarz_coppock_2022,2,table_2,trimmed_symmetric_5_percent_rule,0.01981933671168215,NA,NA,0.01981933671168215,NA,"Not a published quantity. The text says the trimmed row drops the bottom and top 5 percent, but the archive keeps estimates above the 2nd and below the 95th percentile, which is what the published row reports. Applying the symmetric rule the text describes gives this estimate over 59 rather than 61 studies"
+schwarz_coppock_2022,2,figure_2,black_cand_estimate_pp,0.924095993624055,0.9,1,0.924095993624055,1,Figure 2 summary label and text for Black candidate
+schwarz_coppock_2022,2,figure_2,black_cand_se_pp,0.403949584944996,0.4,1,0.403949584944996,1,Figure 2 summary label for Black candidate
+schwarz_coppock_2022,2,figure_2,black_cand_ci_low_pp,0.13236935556196,NA,NA,0.13236935556196,NA,"Figure 2 prints the estimate and standard error, not the interval bounds"
+schwarz_coppock_2022,2,figure_2,black_cand_ci_high_pp,1.7158226316861511,NA,NA,1.7158226316861511,NA,"Figure 2 prints the estimate and standard error, not the interval bounds"
+schwarz_coppock_2022,2,figure_2,white_cand_estimate_pp,2.243283459448613,2.2,1,2.243283459448615,1,Figure 2 summary label and text for White candidate
+schwarz_coppock_2022,2,figure_2,white_cand_se_pp,0.704882012460991,0.7,1,0.704882012460991,1,Figure 2 summary label for White candidate
+schwarz_coppock_2022,2,figure_2,white_cand_ci_low_pp,0.8617401016749561,NA,NA,0.8617401016749571,NA,"Figure 2 prints the estimate and standard error, not the interval bounds"
+schwarz_coppock_2022,2,figure_2,white_cand_ci_high_pp,3.6248268172222686,NA,NA,3.624826817222272,NA,"Figure 2 prints the estimate and standard error, not the interval bounds"
+schwarz_coppock_2022,2,figure_2,n_studies,16,16,1,16,1,Text: a large number of studies (16) over which to pool; both Figure 2 panels show 16 rows
+schwarz_coppock_2022,2,figure_2,diff_in_cates_estimate_pp,1.319187465824557,NA,NA,1.3191874658245588,NA,The difference is discussed but not stated as a number
+schwarz_coppock_2022,2,figure_2,diff_in_cates_pvalue,0.10442580239427804,0.104,1,0.1044258023942776,1,Text: the difference between these two estimates is not statistically significant (p = .104)
+schwarz_coppock_2022,2,figure_3,female_resp_estimate_pp,3.005785735908717,3,1,3.0057857359087192,1,Figure 3 summary label and text for Female respondents
+schwarz_coppock_2022,2,figure_3,female_resp_se_pp,0.532093754832003,0.5,1,0.532093754832003,1,Figure 3 summary label for Female respondents
+schwarz_coppock_2022,2,figure_3,female_resp_ci_low_pp,1.962901140039305,NA,NA,1.962901140039307,NA,"Figure 3 prints the estimate and standard error, not the interval bounds"
+schwarz_coppock_2022,2,figure_3,female_resp_ci_high_pp,4.04867033177813,NA,NA,4.0486703317781325,NA,"Figure 3 prints the estimate and standard error, not the interval bounds"
+schwarz_coppock_2022,2,figure_3,male_resp_estimate_pp,0.85476192509097,0.9,1,0.85476192509097,1,Figure 3 summary label and text for Male respondents
+schwarz_coppock_2022,2,figure_3,male_resp_se_pp,0.509847917506916,0.5,1,0.509847917506916,1,Figure 3 summary label for Male respondents
+schwarz_coppock_2022,2,figure_3,male_resp_ci_low_pp,-0.14452163081533398,NA,NA,-0.14452163081533398,NA,"Figure 3 prints the estimate and standard error, not the interval bounds"
+schwarz_coppock_2022,2,figure_3,male_resp_ci_high_pp,1.854045480997275,NA,NA,1.854045480997276,NA,"Figure 3 prints the estimate and standard error, not the interval bounds"
+schwarz_coppock_2022,2,figure_3,n_studies_in_figure,37,37,1,37,1,Figure 3 panel A shows 37 study rows
+schwarz_coppock_2022,2,figure_3,n_studies_in_text,37,36,0,37,0,Text: for the 36 experiments where we were able to identify respondent gender. The deposit and the paper's own figure both have 37
+schwarz_coppock_2022,2,figure_3,diff_in_cates_estimate_pp,2.151023810817747,NA,NA,2.151023810817749,NA,The difference is discussed but not stated as a number
+schwarz_coppock_2022,2,figure_3,diff_in_cates_pvalue,0.0035127926564261,0.004,1,0.00351279265642609,1,Text: the difference between the two estimates is itself statistically significant (p = .004)
+schwarz_coppock_2022,2,figure_4,dem_resp_estimate_pp,4.154259026957203,4.2,1,4.154259026957201,1,Figure 4 summary label and text for Democratic respondents
+schwarz_coppock_2022,2,figure_4,dem_resp_se_pp,0.799277010412441,0.8,1,0.799277010412441,1,Figure 4 summary label for Democratic respondents
+schwarz_coppock_2022,2,figure_4,dem_resp_ci_low_pp,2.587704872877973,NA,NA,2.587704872877971,NA,"Figure 4 prints the estimate and standard error, not the interval bounds"
+schwarz_coppock_2022,2,figure_4,dem_resp_ci_high_pp,5.720813181036434,NA,NA,5.720813181036432,NA,"Figure 4 prints the estimate and standard error, not the interval bounds"
+schwarz_coppock_2022,2,figure_4,ind_resp_estimate_pp,3.276867581970807,3.3,1,3.2768675819708095,1,Figure 4 summary label and text for Independent respondents
+schwarz_coppock_2022,2,figure_4,ind_resp_se_pp,0.804774319348512,0.8,1,0.8047743193485131,1,Figure 4 summary label for Independent respondents
+schwarz_coppock_2022,2,figure_4,ind_resp_ci_low_pp,1.6995389003649861,NA,NA,1.699538900364988,NA,"Figure 4 prints the estimate and standard error, not the interval bounds"
+schwarz_coppock_2022,2,figure_4,ind_resp_ci_high_pp,4.854196263576627,NA,NA,4.854196263576631,NA,"Figure 4 prints the estimate and standard error, not the interval bounds"
+schwarz_coppock_2022,2,figure_4,rep_resp_estimate_pp,-1.417655835707809,-1.4,1,-1.417655835707809,1,Figure 4 summary label and text for Republican respondents
+schwarz_coppock_2022,2,figure_4,rep_resp_se_pp,0.363468843734238,0.4,1,0.363468843734238,1,Figure 4 summary label for Republican respondents
+schwarz_coppock_2022,2,figure_4,rep_resp_ci_low_pp,-2.130041678929333,NA,NA,-2.130041678929332,NA,"Figure 4 prints the estimate and standard error, not the interval bounds"
+schwarz_coppock_2022,2,figure_4,rep_resp_ci_high_pp,-0.705269992486286,NA,NA,-0.7052699924862851,NA,"Figure 4 prints the estimate and standard error, not the interval bounds"
+schwarz_coppock_2022,2,figure_4,n_studies,20,20,1,20,1,Text: we summarize the results of 20 studies conducted in the US context
+schwarz_coppock_2022,2,figure_4,dem_minus_rep_pvalue,2.2118761084152337e-10,NA,NA,2.2118761084152467e-10,NA,The text says the Republican estimate differs significantly from the Democratic one but gives no p-value
+schwarz_coppock_2022,2,figure_4,ind_minus_rep_pvalue,2.2118761084152337e-10,NA,NA,1.0590986092988912e-7,NA,"Errata: the archive computes this p-value from the Democrat-minus-Republican statistic, so it reports the D-R p-value. The rewrite uses the Independent-minus-Republican statistic. No published number depends on it"
+schwarz_coppock_2022,2,figure_a1,n_cates,954,954,1,954,1,Text and appendix: we show 954 separate CATEs
+schwarz_coppock_2022,2,figure_a1,prop_cates_positive,0.69916142557652,0.5,1,0.69916142557652,1,"Text: 954 separate CATEs, the majority of which are positive. value_paper records that lower bound rather than an equality; 667 of 954 is 0.699, so the claim holds"
+schwarz_coppock_2022,2,figure_a1,n_attribute_studies,44,44,1,44,1,"The appendix carries Figures A.2 through A.45, one per study, which is 44"
+schwarz_coppock_2022,2,table_a1,n_studies_listed,44,43,0,44,0,Published Table A.1 lists 43 studies. Simas and Murdoch (2019) has a CATE figure at A.44 but no Table A.1 row

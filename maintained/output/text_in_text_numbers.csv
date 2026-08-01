@@ -1,0 +1,2 @@
+n_studies,n_positive,n_negative,n_exactly_zero,prop_positive,n_pos_sig_ci,n_neg_sig_ci,n_not_sig_ci,n_pos_sig_p05,n_neg_sig_p05,n_missing_p,n_subjects,n_ratings,n_have_data,n_cates,n_attribute_studies,n_cates_positive,prop_cates_positive
+67,47,19,1,0.7014925373134329,29,6,32,19,2,19,120601,774971,48,954,44,667,0.69916142557652

@@ -1,0 +1,45 @@
+study_id,study_name,figure_number,n_cates,file
+aguilar_1,"Aguilar, Cunow, and Desposato (2015), Sao Paulo",2,2,figure_a2_aguilar_1.pdf
+arnesen_1,"Arnesen, Duell, and Johannesson (2019), Norway",3,29,figure_a3_arnesen_1.pdf
+arnesen_2,"Arnesen, Duell, and Johannesson (2019), Norway",4,29,figure_a4_arnesen_2.pdf
+bansak_1,"Bansak, Hainmueller, Hopkins, and Yamamoto (2018), USA - MTurk",5,70,figure_a5_bansak_1.pdf
+bansak_2,"Bansak, Hainmueller, Hopkins, and Yamamoto (2018), USA - SSI",6,70,figure_a6_bansak_2.pdf
+bischof_1,Bischof and Senninger (2020),7,22,figure_a7_bischof_1.pdf
+blackman_1,"Blackman and Jackson (2019), Tunisia - Face-to-Face",8,34,figure_a8_blackman_1.pdf
+blackman_2,"Blackman and Jackson (2019), Tunisia - YouGov",9,29,figure_a9_blackman_2.pdf
+campbell_1,"Campbell, Cowley, Vivyan, and Wagner (2016), UK - Frequency of MP Dissent",10,13,figure_a10_campbell_1.pdf
+campbell_2,"Campbell, Cowley, Vivyan, and Wagner (2016), UK - Type of MP Dissent",11,11,figure_a11_campbell_2.pdf
+carnes_1,"Carnes and Lupu (2016), Argentina",12,8,figure_a12_carnes_1.pdf
+carnes_2,"Carnes and Lupu (2016), UK",13,6,figure_a13_carnes_2.pdf
+carnes_3,"Carnes and Lupu (2016), USA",14,10,figure_a14_carnes_3.pdf
+clayton_1,"Clayton, Robinson, Johnson, Muriaas (2019), Malawi",15,13,figure_a15_clayton_1.pdf
+claytonnyhan_1,"Clayton and Nyhan (2020), USA - Donors",16,17,figure_a16_claytonnyhan_1.pdf
+claytonnyhan_2,"Clayton and Nyhan (2020), USA - YouGov",17,17,figure_a17_claytonnyhan_2.pdf
+costa_1,"Costa (2020), USA - Lucid",18,10,figure_a18_costa_1.pdf
+eggers_1,"Eggers, Vivyan, and Wagner (2018), UK",19,14,figure_a19_eggers_1.pdf
+goyal_1,"Goyal (2020), India",20,19,figure_a20_goyal_1.pdf
+hainmueller_1,"Hainmueller, Hopkins, and Yamamoto (2014), USA",21,38,figure_a21_hainmueller_1.pdf
+harris_1,"Harris, Kao, and Lust (2020), Malawi",22,19,figure_a22_harris_1.pdf
+harris_2,"Harris, Kao, and Lust (2020), Zambia",23,19,figure_a23_harris_2.pdf
+henderson_1,"Henderson, John A., Logan Dancey, Stephen N. Goggin, Geoffrey Sheagley, and Alexander G. Theodoridis (2019), USA",24,83,figure_a24_henderson_1.pdf
+holman_1,"Holman, Merolla, and Zechmeister (2016), USA",25,4,figure_a25_holman_1.pdf
+hopkins_1,"Hopkins, Daniel (2014), USA",26,25,figure_a26_hopkins_1.pdf
+horne_1,"Horne (2020), UK",27,14,figure_a27_horne_1.pdf
+kalla_1,"Teele, Kalla, and Rosenbluth (2018), USA",28,17,figure_a28_kalla_1.pdf
+kirkland_1,"Kirkland and Coppock (2017), USA - MTurk",29,22,figure_a29_kirkland_1.pdf
+kirkland_2,"Kirkland and Coppock (2017), USA - YouGov",30,25,figure_a30_kirkland_2.pdf
+leeper_1,"Leeper and Robison (2020), USA, SSI",31,57,figure_a31_leeper_1.pdf
+lemi_1,"Lemi (2020), USA, Qualtrics",32,11,figure_a32_lemi_1.pdf
+mares_1,"Mares and Visconti (2020), Romania",33,15,figure_a33_mares_1.pdf
+martin_1,"Martin and Blinder (2020), UK, YouGov",34,12,figure_a34_martin_1.pdf
+mo_1,"Mo (2015), Florida",35,4,figure_a35_mo_1.pdf
+ono_yamada_1,"Ono and Yamada (2018), Japan",36,15,figure_a36_ono_yamada_1.pdf
+saha_1,Saha and Weeks (2019),37,9,figure_a37_saha_1.pdf
+saha_2,Saha and Weeks (2019),38,15,figure_a38_saha_2.pdf
+saha_3,Saha and Weeks (2019),39,16,figure_a39_saha_3.pdf
+saha_4,Saha and Weeks (2019),40,16,figure_a40_saha_4.pdf
+sen_1,"Sen, Maya (2017), USA",41,32,figure_a41_sen_1.pdf
+sen_2,"Sen, Maya (2017), USA",42,27,figure_a42_sen_2.pdf
+shaffner_1,"Shaffner and Green (2020), USA, YouGov Blue",43,19,figure_a43_shaffner_1.pdf
+simas_1,"Simas and Murdoch (2019), USA, Mturk",44,2,figure_a44_simas_1.pdf
+visconti_1,"Visconti (2017), Chile",45,15,figure_a45_visconti_1.pdf
