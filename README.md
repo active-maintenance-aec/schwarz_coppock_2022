@@ -15,6 +15,8 @@
 - [Rewrite verification](#rewrite-verification)
 - [R environment](#r-environment)
 
+*Drafted by Claude Opus 5 under the supervision of Alex Coppock.*
+
 This repository holds the actively maintained replication code for
 Schwarz and Coppock (2022), together with the reproducibility report
 that documents what the original archive did and did not do. It is part
@@ -158,9 +160,9 @@ Nothing here needs fixing to make the archive run. The deprecations are
 all warnings rather than errors: `geom_errorbarh()` and the `%+%`
 operator are deprecated in ggplot2 4.0.0 but still work,
 `reshape2::melt()` and `dcast()` are superseded, and `dplyr::do()` has
-been superseded since 1.0.0. The archive’s classification as Category 2
-rests entirely on the p-value bug documented in the Errata, which is a
-logic error rather than a run failure.
+been superseded since 1.0.0. What is wrong with this archive is the
+p-value bug documented in the Errata, which is a logic error rather than
+a run failure.
 
 **`rmeta` and `ggstance` are both still installable.** The maintained
 rewrite replaces `rmeta::meta.summaries()` with `metafor::rma()` on
@@ -168,8 +170,7 @@ maintenance grounds rather than availability grounds: `rmeta` has not
 been updated since March 2018. The two implementations of
 DerSimonian-Laird agree on every pooled estimate, standard error and
 interval bound in the paper to more than ten significant figures.
-`ggstance::position_dodgev()`, which an earlier pass over this archive
-recorded as no longer available, resolves without incident from ggstance
+`ggstance::position_dodgev()` resolves without incident from ggstance
 0.3.7, which `coefplot` pulls in. It is dropped from the rewrite for a
 different reason: it is inert. Building the layer with and without it
 puts every point at the same coordinates, because every y value it is
@@ -328,21 +329,25 @@ and it is where the 43-against-44 discrepancy shows up.
 
 # Figures
 
-![Figure 1. The 67 study-level ATEs and the pooled random-effects
-estimate.](maintained/output/figure_1_sate_forest_plot.png)
+<img src="maintained/output/figure_1_sate_forest_plot.png"
+style="width:100.0%"
+alt="Figure 1. The 67 study-level ATEs and the pooled random-effects estimate." />
 
-![Figure 2. CATEs of candidate gender by candidate
-race.](maintained/output/figure_2_cate_candidate_race.png)
+<img src="maintained/output/figure_2_cate_candidate_race.png"
+style="width:100.0%"
+alt="Figure 2. CATEs of candidate gender by candidate race." />
 
-![Figure 3. CATEs of candidate gender by respondent
-gender.](maintained/output/figure_3_cate_respondent_gender.png)
+<img src="maintained/output/figure_3_cate_respondent_gender.png"
+style="width:100.0%"
+alt="Figure 3. CATEs of candidate gender by respondent gender." />
 
-![Figure 4. CATEs of candidate gender by respondent party
-identification.](maintained/output/figure_4_cate_respondent_pid.png)
+<img src="maintained/output/figure_4_cate_respondent_pid.png"
+style="width:100.0%"
+alt="Figure 4. CATEs of candidate gender by respondent party identification." />
 
-![Figure A.1. All 954 CATEs of candidate gender conditional on the other
-randomized candidate
-attributes.](maintained/output/figure_a1_cate_candidate_attributes.png)
+<img src="maintained/output/figure_a1_cate_candidate_attributes.png"
+style="width:100.0%"
+alt="Figure A.1. All 954 CATEs of candidate gender conditional on the other randomized candidate attributes." />
 
 # Rewrite verification
 

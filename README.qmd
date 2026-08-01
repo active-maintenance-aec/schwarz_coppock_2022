@@ -37,6 +37,8 @@ gt <- read_csv(here::here("ground_truth", "schwarz_coppock_2022_ground_truth.csv
 manifest <- read_csv(here::here("original_manifest.csv"), show_col_types = FALSE)
 ```
 
+*Drafted by Claude Opus 5 under the supervision of Alex Coppock.*
+
 This repository holds the actively maintained replication code for Schwarz and Coppock (2022), together with the reproducibility report that documents what the original archive did and did not do. It is part of a program applying the maintenance proposal in Peer, Orr and Coppock (2021, *PS: Political Science & Politics*, doi [10.1017/S1049096521000366](https://doi.org/10.1017/S1049096521000366)) to a set of published archives.
 
 | | |
@@ -137,9 +139,9 @@ tibble(
   latex_only(\(k) column_spec(k, 3, width = "4cm"))
 ```
 
-Nothing here needs fixing to make the archive run. The deprecations are all warnings rather than errors: `geom_errorbarh()` and the `%+%` operator are deprecated in ggplot2 4.0.0 but still work, `reshape2::melt()` and `dcast()` are superseded, and `dplyr::do()` has been superseded since 1.0.0. The archive's classification as Category 2 rests entirely on the p-value bug documented in the Errata, which is a logic error rather than a run failure.
+Nothing here needs fixing to make the archive run. The deprecations are all warnings rather than errors: `geom_errorbarh()` and the `%+%` operator are deprecated in ggplot2 4.0.0 but still work, `reshape2::melt()` and `dcast()` are superseded, and `dplyr::do()` has been superseded since 1.0.0. What is wrong with this archive is the p-value bug documented in the Errata, which is a logic error rather than a run failure.
 
-**`rmeta` and `ggstance` are both still installable.** The maintained rewrite replaces `rmeta::meta.summaries()` with `metafor::rma()` on maintenance grounds rather than availability grounds: `rmeta` has not been updated since March 2018. The two implementations of DerSimonian-Laird agree on every pooled estimate, standard error and interval bound in the paper to more than ten significant figures. `ggstance::position_dodgev()`, which an earlier pass over this archive recorded as no longer available, resolves without incident from ggstance 0.3.7, which `coefplot` pulls in. It is dropped from the rewrite for a different reason: it is inert. Building the layer with and without it puts every point at the same coordinates, because every y value it is asked to dodge is already unique, 954 distinct labels across 954 rows in Figure A.1 and no repeated label within any study in Figures A.2 through A.45.
+**`rmeta` and `ggstance` are both still installable.** The maintained rewrite replaces `rmeta::meta.summaries()` with `metafor::rma()` on maintenance grounds rather than availability grounds: `rmeta` has not been updated since March 2018. The two implementations of DerSimonian-Laird agree on every pooled estimate, standard error and interval bound in the paper to more than ten significant figures. `ggstance::position_dodgev()` resolves without incident from ggstance 0.3.7, which `coefplot` pulls in. It is dropped from the rewrite for a different reason: it is inert. Building the layer with and without it puts every point at the same coordinates, because every y value it is asked to dodge is already unique, 954 distinct labels across 954 rows in Figure A.1 and no repeated label within any study in Figures A.2 through A.45.
 
 **What the archive does not produce.** Every write in the deposit is commented out: eight `ggsave()` calls, three `print.xtable()` calls and one `sink()` block. Two of the commented `ggsave()` paths point at a directory that was never part of the deposit (`04_Drafts/current_draft/figures/`). The consequence is that the deposit cannot be checked against itself. There is no committed output to diff a rerun against, and a reader who runs all five scripts sees console output and a `Rplots.pdf` and nothing else. Restoring those writes, so that a rerun can be compared against a committed result, is the single largest change the maintained rewrite makes.
 
@@ -253,30 +255,35 @@ tibble(
 # Figures
 
 ```{r fig1}
+#| out-width: "100%"
 #| fig-cap: "Figure 1. The 67 study-level ATEs and the pooled random-effects estimate."
 include_graphics(here::here("maintained", "output",
                             if (latex_out) "figure_1_sate_forest_plot.pdf" else "figure_1_sate_forest_plot.png"))
 ```
 
 ```{r fig2}
+#| out-width: "100%"
 #| fig-cap: "Figure 2. CATEs of candidate gender by candidate race."
 include_graphics(here::here("maintained", "output",
                             if (latex_out) "figure_2_cate_candidate_race.pdf" else "figure_2_cate_candidate_race.png"))
 ```
 
 ```{r fig3}
+#| out-width: "100%"
 #| fig-cap: "Figure 3. CATEs of candidate gender by respondent gender."
 include_graphics(here::here("maintained", "output",
                             if (latex_out) "figure_3_cate_respondent_gender.pdf" else "figure_3_cate_respondent_gender.png"))
 ```
 
 ```{r fig4}
+#| out-width: "100%"
 #| fig-cap: "Figure 4. CATEs of candidate gender by respondent party identification."
 include_graphics(here::here("maintained", "output",
                             if (latex_out) "figure_4_cate_respondent_pid.pdf" else "figure_4_cate_respondent_pid.png"))
 ```
 
 ```{r figa1}
+#| out-width: "100%"
 #| fig-cap: "Figure A.1. All 954 CATEs of candidate gender conditional on the other randomized candidate attributes."
 include_graphics(here::here("maintained", "output",
                             if (latex_out) "figure_a1_cate_candidate_attributes.pdf" else "figure_a1_cate_candidate_attributes.png"))
