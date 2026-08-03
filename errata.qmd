@@ -113,13 +113,4 @@ Corrected:
 
 > Figure 3 shows the CATEs of candidate gender, conditional on respondent gender, for the **`r n_resp_gender`** experiments where we were able to identify respondent gender.
 
-The deposited respondent-gender file carries `r n_resp_gender` studies, and the published figure itself draws `r n_resp_gender` rows in each of its two panels. Nothing plotted is affected, and neither pooled estimate moves. The figure as the deposit produces it:
-
-```{r fig-3}
-#| out-width: 100%
-#| fig-align: center
-#| fig-cap: "Figure 3 (unchanged)"
-knitr::include_graphics("maintained/output/figure_3_cate_respondent_gender.pdf")
-```
-
-\parbox{\linewidth}{\footnotesize\raggedright \textit{Note:} Figure 3 as published. Panel A is female respondents and panel B male respondents; the sentence describing the figure miscounts its rows. Drawn from the deposited replication archive by \texttt{maintained/figure\_3\_cate\_respondent\_gender.R}. Two of the 74 study-level labels the published figure prints differ from what the deposited respondent-gender file gives, both for Sen (2017), USA, SSI 2; the repository records that difference separately.}
+The deposited respondent-gender file carries `r n_resp_gender` studies, and the published figure itself draws `r n_resp_gender` rows in each of its two panels. Figure 3 is correct as printed and is not reproduced here; only the sentence describing it miscounts. Nothing plotted is affected and neither pooled estimate moves.
