@@ -86,7 +86,15 @@ trim_sensitivity <- bind_rows(
     reframe(re_meta(estimate, std.error, method = "DL")) |>
     mutate(rule = "Text: above 5th and below 95th percentile")
 ) |>
-  relocate(rule)
+  relocate(rule) |>
+  mutate(
+    n_all = nrow(sate_estimates),
+    n_dropped_low = c(
+      sum(sate_estimates$estimate <= quantile(sate_estimates$estimate, 0.02)),
+      sum(sate_estimates$estimate <= quantile(sate_estimates$estimate, 0.05))
+    ),
+    n_dropped_high = sum(sate_estimates$estimate >= quantile(sate_estimates$estimate, 0.95))
+  )
 
 write_csv(trim_sensitivity, here::here("maintained", "output", "table_2_trim_sensitivity.csv"))
 print(trim_sensitivity)

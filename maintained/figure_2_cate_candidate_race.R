@@ -1,6 +1,7 @@
 # schwarz_coppock_2022/maintained/figure_2_cate_candidate_race.R
 # Output: output/figure_2_cate_candidate_race.pdf, output/figure_2_cate_candidate_race.png,
-#   output/figure_2_meta_summary.csv, output/figure_2_diff_in_cates_cand_race.csv
+#   output/figure_2_meta_summary.csv, output/figure_2_diff_in_cates_cand_race.csv,
+#   output/figure_2_plotted_estimates.csv
 # Depends on: original/cand_race_cate_estimates.rds, helpers.R
 # Description: Figure 2, CATEs of candidate gender by candidate race across the 16 US
 #   studies that randomized both, with the test for the difference between the two pools.
@@ -65,6 +66,17 @@ gg_df <- cand_race |>
       levels = c(levels(difference_df$study_name_short_fac), "Random-effects meta-analysis")
     )
   )
+
+# The figure prints an estimate and standard error beside every row of both panels, so
+# those 34 labels are published numbers and are written out here.
+write_csv(
+  gg_df |>
+    transmute(panel = cand_white, study_id = replace_na(study_id, "pooled"),
+              study_name_short = as.character(study_name_short),
+              estimate_100, std.error_100, se_entry) |>
+    arrange(panel, desc(estimate_100)),
+  here::here("maintained", "output", "figure_2_plotted_estimates.csv")
+)
 
 g <- ggplot(gg_df, aes(x = estimate_100, y = study_name_short)) +
   geom_point(alpha = 0.8, stroke = 0) +

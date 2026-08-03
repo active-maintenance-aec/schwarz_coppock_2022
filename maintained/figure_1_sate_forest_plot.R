@@ -1,6 +1,6 @@
 # schwarz_coppock_2022/maintained/figure_1_sate_forest_plot.R
 # Output: output/figure_1_sate_forest_plot.pdf, output/figure_1_sate_forest_plot.png,
-#   output/figure_1_meta_summary.csv
+#   output/figure_1_meta_summary.csv, output/figure_1_plotted_estimates.csv
 # Depends on: original/sate_estimates.rds, helpers.R
 # Description: Figure 1, a forest plot of the 67 study-level ATEs with the pooled
 #   random-effects estimate beneath them.
@@ -36,6 +36,17 @@ gg_df <- sate_estimates |>
     conf.low_100 = conf.low * 100,
     se_entry = make_se_entry(estimate_100, std.error_100, digits = 1)
   )
+
+# The figure prints an estimate and standard error beside every row, so those 68 labels
+# are published numbers and are written out here to be compared against the page.
+write_csv(
+  gg_df |>
+    transmute(study_id = replace_na(study_id, "pooled"),
+              study_name_short = as.character(study_name_short),
+              estimate_100, std.error_100, se_entry) |>
+    arrange(desc(estimate_100)),
+  here::here("maintained", "output", "figure_1_plotted_estimates.csv")
+)
 
 g <- ggplot(gg_df, aes(x = estimate_100, y = study_name_short)) +
   geom_point(alpha = 0.8, stroke = 0) +

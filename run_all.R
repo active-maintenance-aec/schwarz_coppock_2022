@@ -28,6 +28,18 @@ source(here::here("maintained", "figure_a2_a45_cate_by_study.R"))
 # In-text quantities ----
 source(here::here("maintained", "text_in_text_numbers.R"))
 
+# Ground truth ----
+# Rebuilds the comparison against every published number from the outputs above, so it
+# cannot go stale, and gates the coverage of the in-text claims file, which it runs.
+source(here::here("ground_truth", "build_ground_truth.R"))
+
+# In-text claims ----
+# Every number the article prints, beside the sentence that prints it and the value this
+# pipeline produces, in reading order. It reaches each number from the same output/ files
+# the ground truth reads, by its own path, so a disagreement between the two is a finding
+# rather than a repetition.
+source(here::here("maintained", "in_text_claims.R"))
+
 # Deposited archive, again ----
 # The check at the top of this file is a precondition: it says original/ was intact
 # before anything ran. Nothing above writes to original/, and this second pass is what

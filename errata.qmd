@@ -1,0 +1,125 @@
+---
+title: "Errata"
+subtitle: "On Schwarz and Coppock (2022), *The Journal of Politics* 84(2)"
+format:
+  pdf:
+    output-file: schwarz_coppock_2022_errata.pdf
+    geometry: margin=1.25in
+    fontsize: 11pt
+    include-in-header:
+      text: |
+        \usepackage{caption}
+        \captionsetup{labelformat=empty}
+        \usepackage{float}
+        \floatplacement{table}{H}
+        \floatplacement{figure}{H}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
+library(here)
+library(tidyverse)
+here::i_am("errata.qmd")
+
+studies <- read_csv(here("maintained", "output", "text_study_level.csv"),
+                    show_col_types = FALSE)
+counts <- read_csv(here("maintained", "output", "text_in_text_numbers.csv"),
+                   show_col_types = FALSE)
+f3_pooled <- read_csv(here("maintained", "output", "figure_3_meta_summary.csv"),
+                      show_col_types = FALSE)
+
+share_positive <- mean(studies$estimate > 0)
+n_positive <- sum(studies$estimate > 0)
+n_negative <- sum(studies$estimate < 0)
+n_zero <- sum(studies$estimate == 0)
+n_resp_gender <- f3_pooled$n_studies[f3_pooled$resp_female == "Female respondents"]
+
+# Any significance rule is a threshold on the ratio of an estimate to its standard error,
+# and both counts rise as that threshold is relaxed. Tightening it until only 23 positive
+# estimates survive, and loosening it until 11 negative ones do, brackets what any rule can
+# reach.
+z <- abs(studies$estimate / studies$std.error)
+threshold_23_positive <- sort(z[studies$estimate > 0], decreasing = TRUE)[23]
+negatives_there <- sum(studies$estimate < 0 & z >= threshold_23_positive)
+threshold_11_negative <- sort(z[studies$estimate < 0], decreasing = TRUE)[11]
+positives_there <- sum(studies$estimate > 0 & z >= threshold_11_negative)
+
+appendix_cells <- read_csv(here("maintained", "output", "figure_a2_a45_plotted_estimates.csv"),
+                           show_col_types = FALSE)
+n_costa <- sum(appendix_cells$figure_number == 18)
+n_appendix_cells <- 2 * sum(appendix_cells$figure_number != 18)
+```
+
+This note lists four errors in "What Have We Learned about Gender from Candidate Choice Experiments? A Meta-Analysis of Sixty-Seven Factorial Survey Experiments," published in *The Journal of Politics* 84(2), doi [10.1086/716290](https://doi.org/10.1086/716290). **None of them changes a conclusion of the paper.** They are recorded because the numbers themselves are wrong and a reader who quoted them would be misled.
+
+Every corrected value below is computed from the deposited replication archive ([10.7910/DVN/R27ULT](https://doi.org/10.7910/DVN/R27ULT)) at the time this document is rendered. The maintained code is at [github.com/active-maintenance-aec/schwarz_coppock_2022](https://github.com/active-maintenance-aec/schwarz_coppock_2022).
+
+## 1. The share of studies with a positive effect is overstated, in two places
+
+Published, p. 659:
+
+> Across the 67 studies we summarize, **three-fourths** find a positive effect of being described as a woman.
+
+Corrected:
+
+> Across the 67 studies we summarize, **`r sprintf("%.0f%%", 100 * share_positive)`** find a positive effect of being described as a woman.
+
+Published, p. 664:
+
+> We observe considerable study-to-study variation, although **more than three-fourths** of the studies show a positive effect.
+
+Corrected:
+
+> We observe considerable study-to-study variation, although **`r sprintf("%.0f%%", 100 * share_positive)`** of the studies show a positive effect.
+
+Of the 67 study-level estimates, `r n_positive` are positive, `r n_negative` are negative and `r n_zero` is exactly zero. The positive share is `r sprintf("%.1f", 100 * share_positive)` per cent, which is below three-fourths rather than above it. The claim the two sentences make is unaffected: positive effects are the large majority.
+
+## 2. The count of negative estimates omits two studies
+
+Published, p. 662:
+
+> We see a very consistent pattern in favor of women candidates on average: 47 estimates are positive (23 significant) and **18** are negative (11 significant).
+
+Corrected:
+
+> We see a very consistent pattern in favor of women candidates on average: 47 estimates are positive (23 significant) and **`r n_negative`** are negative (11 significant).
+
+The deposited estimates divide into `r n_positive` positive, `r n_negative` negative and `r n_zero` exactly zero, which is the only division summing to 67. The published 47 plus 18 sums to 65.
+
+The two parenthetical counts of significant estimates are left as published, because no corrected value for them can be stated. They correspond to no significance rule the deposited estimates support, and not merely to a rule with a different threshold: both counts rise as a threshold is relaxed, so no threshold can produce 23 and 11 at once. Tightening the threshold until only 23 positive estimates remain significant leaves `r negatives_there` negative ones; loosening it until 11 negative estimates are significant leaves `r positives_there` positive ones. The confidence interval rule the deposited script itself applies gives `r counts$n_pos_sig_ci` and `r counts$n_neg_sig_ci`, and a test of p below 0.05 gives `r counts$n_pos_sig_p05` and `r counts$n_neg_sig_p05` and cannot be what was done in any case, because `r counts$n_missing_p` of the 67 studies carry no p-value. The repository records this as unresolved rather than corrected.
+
+## 3. Appendix Figure A.18 prints none of its estimates
+
+Figure A.18, Costa (2020), USA - Lucid, is the one study in the appendix whose randomized attribute levels are whole tweets. At the width the appendix uses, those row labels push the plotting panel, the points, the confidence intervals, the estimate labels and the horizontal axis off the right edge of the page. What is printed is a column of truncated sentences, an axis title cut off after four letters, and no data. None of the `r n_costa` conditional effects the figure is drawn from appears on the page.
+
+Nothing is wrong with the estimates themselves; they are in the deposited archive and are unchanged. The figure as it should have appeared:
+
+```{r fig-a18}
+#| out-width: 100%
+#| fig-align: center
+#| fig-cap: "Figure A.18 (redrawn)"
+knitr::include_graphics("maintained/output/figure_a18_costa_1_legible.pdf")
+```
+
+\parbox{\linewidth}{\footnotesize\raggedright \textit{Note:} Figure A.18 redrawn from the deposited replication archive by \texttt{maintained/figure\_a2\_a45\_cate\_by\_study.R}, with the row labels wrapped and the canvas widened so the panel fits the page. Every estimate, standard error and interval is unchanged; only the layout differs. The 43 other per-study appendix figures print their estimates correctly, and all `r n_appendix_cells` of those labels reproduce.}
+
+## 4. Figure 3 covers 37 experiments, not 36
+
+Published, p. 663:
+
+> Figure 3 shows the CATEs of candidate gender, conditional on respondent gender, for the **36** experiments where we were able to identify respondent gender.
+
+Corrected:
+
+> Figure 3 shows the CATEs of candidate gender, conditional on respondent gender, for the **`r n_resp_gender`** experiments where we were able to identify respondent gender.
+
+The deposited respondent-gender file carries `r n_resp_gender` studies, and the published figure itself draws `r n_resp_gender` rows in each of its two panels. Nothing plotted is affected, and neither pooled estimate moves. The figure as the deposit produces it:
+
+```{r fig-3}
+#| out-width: 100%
+#| fig-align: center
+#| fig-cap: "Figure 3 (unchanged)"
+knitr::include_graphics("maintained/output/figure_3_cate_respondent_gender.pdf")
+```
+
+\parbox{\linewidth}{\footnotesize\raggedright \textit{Note:} Figure 3 as published. Panel A is female respondents and panel B male respondents; the sentence describing the figure miscounts its rows. Drawn from the deposited replication archive by \texttt{maintained/figure\_3\_cate\_respondent\_gender.R}. Two of the 74 study-level labels the published figure prints differ from what the deposited respondent-gender file gives, both for Sen (2017), USA, SSI 2; the repository records that difference separately.}

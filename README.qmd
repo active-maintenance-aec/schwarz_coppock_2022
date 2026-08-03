@@ -33,7 +33,11 @@ latex_out <- knitr::is_latex_output()
 latex_only <- function(k, f) if (latex_out) f(k) else k
 
 gt <- read_csv(here::here("ground_truth", "schwarz_coppock_2022_ground_truth.csv"),
-               show_col_types = FALSE)
+               col_types = cols(.default = col_character(), match = col_integer(),
+                                match_rewrite = col_integer()))
+claims <- read_csv(here::here("ground_truth", "published_claims_reproduction.csv"),
+                   col_types = cols(.default = col_character(),
+                                    match_rewrite = col_integer()))
 manifest <- read_csv(here::here("original_manifest.csv"), show_col_types = FALSE)
 ```
 
@@ -69,6 +73,16 @@ n_match <- sum(gt$match == 1, na.rm = TRUE)
 n_fail <- sum(gt$match == 0, na.rm = TRUE)
 n_unverifiable <- sum(is.na(gt$match))
 n_rewrite_match <- sum(gt$match_rewrite == 1, na.rm = TRUE)
+
+n_published <- nrow(claims)
+n_published_reproduced <- sum(claims$match_rewrite == 1, na.rm = TRUE)
+n_published_disagree <- sum(claims$match_rewrite == 0, na.rm = TRUE)
+n_published_no_counterpart <- sum(is.na(claims$match_rewrite))
+is_plotted_label <- str_detect(claims$claim_id, " :: (estimate|std_error)$")
+n_figure_cells <- sum(claims$location %in% c("figure_1", "figure_2", "figure_3", "figure_4") &
+                        is_plotted_label)
+n_appendix_cells <- sum(str_detect(claims$location, "^figure_a\\d+$") & is_plotted_label)
+n_table_1_cells <- sum(claims$location == "table_1")
 ```
 
 Two questions, answered before the detail.
@@ -81,16 +95,33 @@ What the archive does not do is write anything. All eight `ggsave()` calls, all 
 
 ## Does the maintained rewrite reproduce the paper?
 
-Mostly, and the exceptions are in the article rather than in the code. `r n_match` of the `r n_verifiable` verifiable ground truth claims match the published values to reported precision, including every pooled estimate and standard error printed on Figures 1 through 4 and all forty cells of Table 2. The remaining `r n_unverifiable` recorded quantities are ones the article never prints, most of them confidence interval bounds that the forest plots draw but do not label.
+Mostly, and the exceptions are mostly in the article rather than in the code. Every number the article and its appendix print has been extracted by hand into `ground_truth/published_claims.csv`, `r format(n_published, big.mark = ",")` of them, and `r format(n_published_reproduced, big.mark = ",")` reproduce exactly at the precision the page uses. `r n_published_disagree` disagree and `r n_published_no_counterpart` have no counterpart in the deposit at all.
 
-The `r n_fail` failures are all counts stated in prose, and none of them changes a substantive conclusion:
+Most of that total is float cells that a reader would not think of as a table. The four forest plots print an estimate and a standard error beside **every** row, not only beside the pooled summary, which is `r n_figure_cells` published numbers; the 44 per-study appendix figures do the same, which is another `r format(n_appendix_cells, big.mark = ",")`; and Table 1 prints subject and rating counts for each of the 67 studies, which is `r n_table_1_cells` more. All of those reproduce but two.
 
-- The article reports that of the 67 estimates, "47 are positive (23 significant) and 18 are negative (11 significant)." The deposit has 47 positive, **19** negative and one exactly zero, which is the only split that sums to 67; 47 plus 18 sums to 65. Neither of the two plausible significance rules recovers 23 and 11. The rule the archive's own script applies, a confidence interval excluding zero, gives 29 positive-and-significant and 6 negative-and-significant. Testing p below 0.05 instead gives 19 and 2, and cannot be what was done in any case, because 19 of the 67 rows carry no p-value at all.
-- The article describes Figure 3 as covering "the 36 experiments where we were able to identify respondent gender." The deposit has 37, and so does the published figure, whose panel A prints 37 study rows.
-- The discussion says "more than three-fourths of the studies show a positive effect." The share is 47 of 67, or 70.1%.
-- Table A.1 lists 43 studies where the appendix carries 44 per-study CATE figures; Simas and Murdoch (2019) has Figure A.44 but no Table A.1 row.
+The disagreements, none of which changes a substantive conclusion:
 
-Every estimate, standard error, interval and p-value the article reports reproduces exactly. What does not reproduce is a set of hand-counted descriptions of those estimates.
+```{r summary_failures}
+claims |>
+  filter(match_rewrite == 0) |>
+  select(claim_id, value_paper, value_rewrite, defect_locus) |>
+  kable(booktabs = TRUE,
+        col.names = c("Claim", "Article", "Deposit", "Where the fault lies"),
+        caption = "Published numbers the deposit does not reproduce.") |>
+  latex_only(\(k) kable_styling(k, latex_options = c("striped", "hold_position"), font_size = 8))
+```
+
+```{r locus_counts, include=FALSE}
+locus <- claims |> filter(match_rewrite == 0) |> count(defect_locus) |> deframe()
+```
+
+`r locus[["paper_internal"]]` are the article contradicting its own data. Five of those are in `errata.qmd`, which renders to `schwarz_coppock_2022_errata.pdf` and sets out four numbered items with every correction computed from the deposit at render time; the sixth is the row count of appendix Table A.1, which is a defect in a table rather than in a sentence and is described below. `r locus[["archive"]]` are the deposit disagreeing with the page. The remaining `r locus[["unresolved"]]` are unresolved, in the strict sense that the cause cannot be established from the deposit and guessing at one would be worse than saying so.
+
+**One published figure prints no data at all.** Appendix Figure A.18 is Costa (2020), whose randomized attribute levels are whole tweets. At the width the appendix uses, those row labels push the plotting panel, the points, the intervals, the estimate labels and the axis off the right edge of the page, so the published figure shows a column of truncated sentences, an axis title cut off after four letters, and none of its ten estimates. The deposited code reproduces the defect exactly, which is why the maintained `figure_a18_costa_1.pdf` looks the same; `figure_a18_costa_1_legible.pdf` is the same ten estimates redrawn so they can be read, and it is what the errata reprints.
+
+**The significance counts reproduce under no rule.** The article reports that of the 67 estimates, "47 are positive (23 significant) and 18 are negative (11 significant)." The rule the deposited script itself applies, a confidence interval excluding zero, gives 29 and 6. Testing p below 0.05 gives 19 and 2, and cannot be what was done in any case, because 19 of the 67 rows carry no p-value at all. Nor is this a matter of finding the right threshold: both counts rise as a threshold is relaxed, so no threshold produces 23 and 11 together. The threshold that puts 23 estimates in the positive column leaves 5 in the negative one, and the threshold that reaches 11 in the negative column leaves 44 in the positive one. No corrected value can be stated, so none is; this is recorded as unresolved rather than as an erratum.
+
+Every estimate, standard error, interval and p-value the article reports in prose reproduces exactly. What fails is a set of hand-counted descriptions of those estimates, plus two cells of one appendix figure.
 
 # Paper overview
 
@@ -147,6 +178,8 @@ Nothing here needs fixing to make the archive run. The deprecations are all warn
 
 # Errata
 
+This section documents corrections the maintained rewrite makes to the deposited code. Errors in the article itself are a separate document: `errata.qmd`, which renders to `schwarz_coppock_2022_errata.pdf`, sets out the three misstated sentences one by one, with the correction computed from the deposit at render time.
+
 **The Independent-versus-Republican p-value is computed from the wrong statistic.** In `meta_analyze_cates_resp_pid.R`, the block that tests the two differences between pooled partisan CATEs computes the second p-value from the first test's statistic:
 
 ``` r
@@ -166,7 +199,7 @@ I_R_p.value = 2 * pnorm(abs(I_R_statistic), lower.tail = FALSE)
 
 The article states only that "the Republican estimate is statistically significantly different from the Democratic and Independent estimates," which is true of both the wrong value and the right one. No published number changes.
 
-**Not corrected: the trimming rule.** Table 2's last-but-one row is labelled "Trimmed (middle 90% of estimates)" and the text says the row drops "the bottom and top 5% of point estimates." The code keeps estimates above the 2nd percentile and below the 95th, retaining 61 of 67 studies. Correcting 0.02 to 0.05 would be a plausible reading of a typo, but it is a change to a sample definition rather than to a mechanical error, so the rewrite reproduces the published row as computed and reports the alternative separately in `output/table_2_trim_sensitivity.csv`. The symmetric rule the text describes gives 0.020 over 59 studies against the published 0.018 over 61, so the robustness claim the row is making survives either reading.
+**Not corrected: the trimming rule.** Table 2's last-but-one row is labelled "Trimmed (middle 90% of estimates)" and the text says the row drops "the bottom and top 5% of point estimates." The code keeps estimates above the 2nd percentile and below the 95th, which drops the bottom 3.0 per cent and the top 6.0 per cent and retains 61 of 67 studies, or 91 per cent rather than 90. Correcting 0.02 to 0.05 would be a plausible reading of a typo, but it is a change to a sample definition rather than to a mechanical error, so the rewrite reproduces the published row as computed and reports the alternative separately in `output/table_2_trim_sensitivity.csv`. The symmetric rule the text describes gives 0.020 over 59 studies against the published 0.018 over 61, so the robustness claim the row is making survives either reading.
 
 **Not corrected: the year threshold.** The subset labelled "Post-2014 studies" is selected by `year > 2010`. The labels are nonetheless accurate, because the sample contains no study fielded between 1998 and 2014, a gap the article notes in its fourth footnote, so every threshold in that window produces the same two groups of 63 and 4.
 
@@ -186,7 +219,9 @@ gt |>
   latex_only(\(k) kable_styling(k, latex_options = c("striped", "hold_position")))
 ```
 
-`ground_truth/schwarz_coppock_2022_ground_truth.csv` records `r n_claims` quantities. `value_script` is what the deposited scripts produce through `rmeta`, `value_rewrite` is what `maintained/` produces through `metafor`, and `value_paper` is filled only by reading the article: from Table 1 and Table 2, from the article's prose, and from the pooled-estimate labels printed inside Figures 1 through 4, which are rasterized in the published PDF and were read off page renderings. Where the article does not state a quantity the cell is empty and `match` is `NA`, which is the case for every confidence interval bound in the four figures: the forest plots draw the intervals but label only the estimate and its standard error.
+`ground_truth/schwarz_coppock_2022_ground_truth.csv` records `r n_claims` quantities and answers a question about the deposited code: `value_script` is what the deposited scripts produce through `rmeta`, `value_rewrite` is what `maintained/` produces through `metafor`, and `value_paper` is filled only by reading the article. Where the article does not state a quantity the cell is empty and `match` is `NA`, which is the case for every confidence interval bound in the four figures: the forest plots draw the intervals but label only the estimate and its standard error.
+
+The article's own side of the comparison is exhaustive and lives separately, in the next section.
 
 ```{r gt_failures}
 gt |>
@@ -194,10 +229,55 @@ gt |>
   select(table_figure, claim, value_paper, value_script, notes) |>
   kable(booktabs = TRUE, digits = 3,
         col.names = c("Table or figure", "Claim", "Article", "Deposit", "Note"),
-        caption = "The six published quantities that do not reproduce.") |>
+        caption = paste0("The ", n_fail,
+                         " recorded quantities that do not reproduce.")) |>
   latex_only(\(k) kable_styling(k, latex_options = c("striped", "hold_position", "scale_down"))) |>
   latex_only(\(k) column_spec(k, 5, width = "6cm"))
 ```
+
+# Every published number
+
+The ground truth above was built around the article's floats. That misses the numbers a reader is most likely to quote, which sit in sentences, and it misses the numbers a figure prints on its own face. So the article and its appendix were read end to end and every numeric token extracted by hand into `ground_truth/published_claims.csv`: `r format(n_published, big.mark = ",")` of them, each classified by what would verify it.
+
+```{r claims_types}
+claims |>
+  count(claim_type) |>
+  mutate(claim_type = recode(claim_type,
+    pipeline = "Pipeline: the deposit should produce it",
+    descriptive = "Descriptive: a claim about shape, sign or a count",
+    definitional = "Definitional: a scale point or a design parameter",
+    structural = "Structural: a float's own shape",
+    transcribed = "Transcribed: copied from another paper")) |>
+  arrange(desc(n)) |>
+  kable(booktabs = TRUE, col.names = c("What would verify it", "Claims"),
+        caption = paste0("The ", format(n_published, big.mark = ","),
+                         " numbers the article and appendix print.")) |>
+  latex_only(\(k) kable_styling(k, latex_options = c("striped", "hold_position")))
+```
+
+Two instruments read those claims against the pipeline, by separate paths from the same outputs. `ground_truth/build_ground_truth.R` writes `ground_truth/published_claims_reproduction.csv`, which puts the pipeline's value beside every published one; `maintained/in_text_claims.R` prints each number beneath the sentence that states it, quoted verbatim. Where one parses the label a plot or a table actually draws, the other formats the estimate behind it. The build runs the claims file, counts what it prints against the extraction, and stops if the two instruments disagree anywhere, so neither can quietly stop checking.
+
+```{r claims_coverage}
+claims |>
+  mutate(location = if_else(str_detect(location, "^figure_a([2-9]|[1-4][0-9])$"),
+                            "figure_a2 to figure_a45", location)) |>
+  summarize(Claims = n(),
+            Reproduces = sum(match_rewrite == 1, na.rm = TRUE),
+            `Does not` = sum(match_rewrite == 0, na.rm = TRUE),
+            `No counterpart` = sum(is.na(match_rewrite)),
+            .by = location) |>
+  arrange(location) |>
+  rename(`Where the article prints it` = location) |>
+  kable(booktabs = TRUE,
+        caption = "Published numbers against the deposit, by where the article prints them.") |>
+  latex_only(\(k) kable_styling(k, latex_options = c("striped", "hold_position")))
+```
+
+**Every forest plot in the paper is a published table in disguise.** Each prints an estimate and a standard error, in percentage points to one decimal, beside every study row and not only beside the pooled summary. In the four main figures that is `r n_figure_cells` numbers, and in the 44 per-study appendix figures another `r format(n_appendix_cells, big.mark = ",")`. The four main figures are rasterized in the published PDF, so no text search reaches them; they were read off page renderings. All but two reproduce, and the two are both Sen (2017), USA, SSI 2 in Figure 3, where the page prints 6.0 and 0.5 and the deposited respondent-gender file gives 5.9 and 0.4. The deposited study-level file does carry a revised Sen SSI 2 estimate, which Figure 1 reproduces exactly, so the conditional-effects file is one revision behind the figure the article printed. Every one of the `r format(n_appendix_cells, big.mark = ",")` appendix labels reproduces exactly.
+
+**The deposit has no counterpart for `r n_published_no_counterpart` published numbers**, each named with its reason in `build_ground_truth.R`. Twelve are quoted from other people's papers and cannot drift when this pipeline moves. Two are theoretical reference points, a majority threshold and the midpoint of a vote margin. Three are the appendix B validation of the digital measurement procedure, whose average absolute error and correlation compare digital measurements against estimates computed from Kirkland and Coppock's raw data; the deposit carries neither, so those numbers are not reconstructible from it. What the deposit does record is which studies were measured that way, in a free-text note field: the note marks ten experiments in eight papers where the appendix says nine in seven.
+
+**Two further disagreements the float-shaped ground truth could not see.** The design section says the 67 experiments come from 49 papers, where the deposit assigns 50 distinct bibliography keys to them. And Table 2's trimmed row, labelled "middle 90% of estimates" and described in the text as dropping "the bottom and top 5% of point estimates," in fact drops the bottom 3.0 per cent and the top 6.0 per cent, retaining 61 of 67. Both are recorded as unresolved: the deposit is self-consistent in each case and cannot say which of the two readings was intended.
 
 # Maintained rewrite
 
@@ -214,20 +294,22 @@ tibble(
     "figure_4_cate_respondent_pid.R",
     "figure_a1_cate_candidate_attributes.R",
     "figure_a2_a45_cate_by_study.R",
-    "text_in_text_numbers.R"
+    "text_in_text_numbers.R",
+    "in_text_claims.R"
   ),
   Output = c(
     "Packages, re_meta(), diff_test(), label formatting",
     "table_1_study_manifest.csv",
     "table_2_meta_robustness.csv, table_2_trim_sensitivity.csv",
     "table_a1_study_attributes.csv",
-    "figure_1_sate_forest_plot.pdf and .png, figure_1_meta_summary.csv",
-    "figure_2_cate_candidate_race.pdf and .png, figure_2_meta_summary.csv, figure_2_diff_in_cates_cand_race.csv",
-    "figure_3_cate_respondent_gender.pdf and .png, figure_3_meta_summary.csv, figure_3_diff_in_cates_resp_gender.csv",
-    "figure_4_cate_respondent_pid.pdf and .png, figure_4_meta_summary.csv, figure_4_diff_in_cates_resp_pid.csv",
+    "figure_1_sate_forest_plot.pdf and .png, figure_1_meta_summary.csv, figure_1_plotted_estimates.csv",
+    "figure_2_cate_candidate_race.pdf and .png, figure_2_meta_summary.csv, figure_2_diff_in_cates_cand_race.csv, figure_2_plotted_estimates.csv",
+    "figure_3_cate_respondent_gender.pdf and .png, figure_3_meta_summary.csv, figure_3_diff_in_cates_resp_gender.csv, figure_3_plotted_estimates.csv",
+    "figure_4_cate_respondent_pid.pdf and .png, figure_4_meta_summary.csv, figure_4_diff_in_cates_resp_pid.csv, figure_4_plotted_estimates.csv",
     "figure_a1_cate_candidate_attributes.pdf and .png, figure_a1_cate_summary.csv",
     "44 per-study appendix figures, figure_a2_a45_index.csv",
-    "text_in_text_numbers.csv"
+    "text_in_text_numbers.csv, text_study_level.csv",
+    "Printed only: every published number beneath the sentence that states it"
   )
 ) |>
   kable(booktabs = TRUE, caption = "The maintained rewrite.") |>

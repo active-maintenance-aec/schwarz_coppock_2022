@@ -1,6 +1,7 @@
 # schwarz_coppock_2022/maintained/figure_3_cate_respondent_gender.R
 # Output: output/figure_3_cate_respondent_gender.pdf, output/figure_3_cate_respondent_gender.png,
-#   output/figure_3_meta_summary.csv, output/figure_3_diff_in_cates_resp_gender.csv
+#   output/figure_3_meta_summary.csv, output/figure_3_diff_in_cates_resp_gender.csv,
+#   output/figure_3_plotted_estimates.csv
 # Depends on: original/resp_gender_cate_estimates.rds, helpers.R
 # Description: Figure 3, CATEs of candidate gender by respondent gender, with the test
 #   for the difference between the two pools.
@@ -61,6 +62,17 @@ gg_df <- resp_gender |>
       levels = c(levels(difference_df$study_name_short_fac), "Random-effects meta-analysis")
     )
   )
+
+# The figure prints an estimate and standard error beside every row of both panels, so
+# those 76 labels are published numbers and are written out here.
+write_csv(
+  gg_df |>
+    transmute(panel = resp_female, study_id = replace_na(study_id, "pooled"),
+              study_name_short = as.character(study_name_short),
+              estimate_100, std.error_100, se_entry) |>
+    arrange(panel, desc(estimate_100)),
+  here::here("maintained", "output", "figure_3_plotted_estimates.csv")
+)
 
 g <- ggplot(gg_df, aes(x = estimate_100, y = study_name_short)) +
   geom_point(alpha = 0.8, stroke = 0) +

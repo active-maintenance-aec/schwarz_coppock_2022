@@ -1,2 +1,2 @@
-n_studies,n_positive,n_negative,n_exactly_zero,prop_positive,n_pos_sig_ci,n_neg_sig_ci,n_not_sig_ci,n_pos_sig_p05,n_neg_sig_p05,n_missing_p,n_subjects,n_ratings,n_have_data,n_cates,n_attribute_studies,n_cates_positive,prop_cates_positive
-67,47,19,1,0.7014925373134329,29,6,32,19,2,19,120601,774971,48,954,44,667,0.69916142557652
+n_studies,n_positive,n_negative,n_exactly_zero,prop_positive,n_pos_sig_ci,n_neg_sig_ci,n_not_sig_ci,n_pos_sig_p05,n_neg_sig_p05,n_missing_p,n_subjects,n_ratings,n_have_data,n_no_data,n_papers,n_countries,n_us_studies,prop_us_studies,first_year,last_year,n_studies_1999_to_2013,n_studies_1998_or_earlier,n_digitally_measured,n_papers_digitally_measured,n_cates,n_attribute_studies,n_cates_positive,prop_cates_positive
+67,47,19,1,0.7014925373134329,29,6,32,19,2,19,120601,774971,48,19,50,19,35,0.5223880597014925,1982,2021,0,4,10,8,954,44,667,0.69916142557652

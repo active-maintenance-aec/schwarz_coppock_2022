@@ -1,69 +1,69 @@
-study_name_short,n_subjects,n_ratings,have_data,sample_type
-"Aguilar et al. (2015), Brazil","3,908","27,076",Yes,representative
-"Aguilar et al. (2015), Sao Paulo",608,608,Yes,convenience
-"Arnesen, Duell, and Johannesson (2019), Norway 1","1,134","4,420",Yes,representative
-"Arnesen, Duell, and Johannesson (2019), Norway 2","1,077","6,370",Yes,representative
-"Bansak et al. (2018), USA - MTurk","2,411","144,494",Yes,convenience
-"Bansak et al. (2018), USA - SSI",643,"38,482",Yes,convenience
-"Bischof and Senninger (2020), Germany",993,"9,930",Yes,convenience
-"Blackman and Jackson (2019), Tunisia - Face-to-Face",383,"3,064",Yes,representative
-"Blackman and Jackson (2019), Tunisia - YouGov",574,"5,740",Yes,representative
-"Campbell et al. (2016), UK Frequency of MP Dissent","1,899","18,990",Yes,representative
-"Campbell et al. (2016), UK Type of MP Dissent","1,919","19,190",Yes,representative
-"Carnes and Lupu (2016), Argentina","1,149","2,298",Yes,representative
-"Carnes and Lupu (2016), UK","5,548","11,096",Yes,representative
-"Carnes and Lupu (2016), USA","1,000","2,000",Yes,representative
-"Clayton and Nyhan (2020), USA - Donors",570,"11,192",Yes,convenience
-"Clayton and Nyhan (2020), USA - YouGov",954,"19,080",Yes,representative
-"Clayton et al. (2019), Malawi",604,"3,624",Yes,representative
-"Costa (2020), USA - Lucid","1,501","18,012",Yes,convenience
-"Dahl and Nyrup (2020), Denmark","1,621","15,916",Yes,convenience
-"Doherty, Dowling, and Miller (2020), USA",831,"13,040",Yes,representative
-"Eggers et al. (2018), UK","1,367","2,806",Yes,representative
-"Goyal (2020), India","1,664","9,984",Yes,representative
-"Hainmueller et al. (2014), USA",311,"3,466",Yes,convenience
-"Harris, Kao, and Lust (2020), Malawi","7,522","7,522",Yes,representative
-"Harris, Kao, and Lust (2020), Zambia","5,508","5,508",Yes,representative
-"Henderson et al. (2019), USA, CCES","2,791","22,328",Yes,representative
-"Holman et al. (2016), USA","1,001","1,001",Yes,representative
-"Hopkins (2014), USA",551,"7,714",Yes,representative
-"Horne (2020), UK","3,257","26,056",Yes,representative
-"Kao and Benstead (2021), Jordan","1,490","2,926",Yes,representative
-"Kirkland and Coppock (2017), USA - MTurk","1,204","12,032",Yes,convenience
-"Kirkland and Coppock (2017), USA - YouGov","1,200","11,432",Yes,representative
-"Leeper and Robison (2020), USA, SSI",743,"7,430",Yes,convenience
-"Lemi (2020), USA, Qualtrics",786,"6,394",Yes,convenience
-"Mares and Visconti (2020), Romania",502,"5,020",Yes,convenience
-"Martin and Blinder (2020), UK, YouGov","3,943","7,886",Yes,representative
-"Mo (2015), Florida",407,"5,700",Yes,convenience
-"Ono and Yamada (2018), Japan","2,686","21,488",Yes,convenience
-"Saha and Weeks (2019), DLABSS 1",551,"3,280",Yes,convenience
-"Saha and Weeks (2019), UK, Prolific",869,"8,682",Yes,convenience
-"Saha and Weeks (2019), USA, DLABSS 2",497,"4,886",Yes,convenience
-"Saha and Weeks (2019), USA, SSI","1,248","7,480",Yes,representative
-"Sen (2017), USA, SSI 1",798,"4,797",Yes,convenience
-"Sen (2017), USA, SSI 2",765,"4,594",Yes,convenience
-"Shaffner and Green (2020), USA, YouGov Blue","2,953","29,530",Yes,convenience
-"Simas and Murdoch (2019), US, Mturk","1,312","1,312",Yes,convenience
-"Teele et al. (2018), USA","1,052","6,312",Yes,representative
-"Visconti (2017), Chile",210,"3,360",Yes,convenience
-"Armendariz et al. (2018), USA","1,495","2,990",No,convenience
-"Atkeson and Hamel (2018), USA","1,500","3,000",No,convenience
-"Bermeo and Bhatia (2017), Afghanistan","2,485","7,455",No,representative
-"Crowder-Meyer et al. (2015), MTurk",430,"1,290",No,convenience
-"Crowder-Meyer et al. (2015), UC Merced",350,"1,050",No,student
-"Fox and Smith (1998), UCSB",650,"2,600",No,student
-"Fox and Smith (1998), University of Wyoming",990,"3,960",No,student
-"Hobolt and Rodon (2020), UK, YouGov","1,936","19,360",No,representative
-"Horiuchi et al. (2017), Japan","2,200","22,000",No,convenience
-"Kage et al. (2018), Japan","1,611","9,666",No,representative
-"Kang et al. (2018), Australia","2,290","4,580",No,representative
-"Ono and Burden (2018), USA, SSI","1,583","15,830",No,representative
-"Piliavin (1987), USA",245,245,No,student
-"Schuler (2020), Vietnam","13,576","27,152",No,representative
-"Sigelman and Sigelman, (1982), USA",227,227,No,student
-"Tomz and Van Houweling (2016), USA","4,200","25,200",No,representative
-"Vivyan and Wagner (2015), UK, YouGov - 2012","1,899","1,899",No,representative
-"Vivyan and Wagner (2015), UK, YouGov - 2013","1,919","1,919",No,representative
-"Wuest and Pontusson (2017), Switzerland","4,500","9,000",No,representative
-Total,"120,601","774,971",48,
+study_id,study_name_short,n_subjects,n_ratings,have_data,sample_type
+aguilar_2,"Aguilar et al. (2015), Brazil","3,908","27,076",Yes,representative
+aguilar_1,"Aguilar et al. (2015), Sao Paulo",608,608,Yes,convenience
+arnesen_1,"Arnesen, Duell, and Johannesson (2019), Norway 1","1,134","4,420",Yes,representative
+arnesen_2,"Arnesen, Duell, and Johannesson (2019), Norway 2","1,077","6,370",Yes,representative
+bansak_1,"Bansak et al. (2018), USA - MTurk","2,411","144,494",Yes,convenience
+bansak_2,"Bansak et al. (2018), USA - SSI",643,"38,482",Yes,convenience
+bischof_1,"Bischof and Senninger (2020), Germany",993,"9,930",Yes,convenience
+blackman_1,"Blackman and Jackson (2019), Tunisia - Face-to-Face",383,"3,064",Yes,representative
+blackman_2,"Blackman and Jackson (2019), Tunisia - YouGov",574,"5,740",Yes,representative
+campbell_1,"Campbell et al. (2016), UK Frequency of MP Dissent","1,899","18,990",Yes,representative
+campbell_2,"Campbell et al. (2016), UK Type of MP Dissent","1,919","19,190",Yes,representative
+carnes_1,"Carnes and Lupu (2016), Argentina","1,149","2,298",Yes,representative
+carnes_2,"Carnes and Lupu (2016), UK","5,548","11,096",Yes,representative
+carnes_3,"Carnes and Lupu (2016), USA","1,000","2,000",Yes,representative
+claytonnyhan_1,"Clayton and Nyhan (2020), USA - Donors",570,"11,192",Yes,convenience
+claytonnyhan_2,"Clayton and Nyhan (2020), USA - YouGov",954,"19,080",Yes,representative
+clayton_1,"Clayton et al. (2019), Malawi",604,"3,624",Yes,representative
+costa_1,"Costa (2020), USA - Lucid","1,501","18,012",Yes,convenience
+dahl_1,"Dahl and Nyrup (2020), Denmark","1,621","15,916",Yes,convenience
+doherty_1,"Doherty, Dowling, and Miller (2020), USA",831,"13,040",Yes,representative
+eggers_1,"Eggers et al. (2018), UK","1,367","2,806",Yes,representative
+goyal_1,"Goyal (2020), India","1,664","9,984",Yes,representative
+hainmueller_1,"Hainmueller et al. (2014), USA",311,"3,466",Yes,convenience
+harris_1,"Harris, Kao, and Lust (2020), Malawi","7,522","7,522",Yes,representative
+harris_2,"Harris, Kao, and Lust (2020), Zambia","5,508","5,508",Yes,representative
+henderson_1,"Henderson et al. (2019), USA, CCES","2,791","22,328",Yes,representative
+holman_1,"Holman et al. (2016), USA","1,001","1,001",Yes,representative
+hopkins_1,"Hopkins (2014), USA",551,"7,714",Yes,representative
+horne_1,"Horne (2020), UK","3,257","26,056",Yes,representative
+kao_1,"Kao and Benstead (2021), Jordan","1,490","2,926",Yes,representative
+kirkland_1,"Kirkland and Coppock (2017), USA - MTurk","1,204","12,032",Yes,convenience
+kirkland_2,"Kirkland and Coppock (2017), USA - YouGov","1,200","11,432",Yes,representative
+leeper_1,"Leeper and Robison (2020), USA, SSI",743,"7,430",Yes,convenience
+lemi_1,"Lemi (2020), USA, Qualtrics",786,"6,394",Yes,convenience
+mares_1,"Mares and Visconti (2020), Romania",502,"5,020",Yes,convenience
+martin_1,"Martin and Blinder (2020), UK, YouGov","3,943","7,886",Yes,representative
+mo_1,"Mo (2015), Florida",407,"5,700",Yes,convenience
+ono_yamada_1,"Ono and Yamada (2018), Japan","2,686","21,488",Yes,convenience
+saha_1,"Saha and Weeks (2019), DLABSS 1",551,"3,280",Yes,convenience
+saha_4,"Saha and Weeks (2019), UK, Prolific",869,"8,682",Yes,convenience
+saha_2,"Saha and Weeks (2019), USA, DLABSS 2",497,"4,886",Yes,convenience
+saha_3,"Saha and Weeks (2019), USA, SSI","1,248","7,480",Yes,representative
+sen_1,"Sen (2017), USA, SSI 1",798,"4,797",Yes,convenience
+sen_2,"Sen (2017), USA, SSI 2",765,"4,594",Yes,convenience
+shaffner_1,"Shaffner and Green (2020), USA, YouGov Blue","2,953","29,530",Yes,convenience
+simas_1,"Simas and Murdoch (2019), US, Mturk","1,312","1,312",Yes,convenience
+kalla_1,"Teele et al. (2018), USA","1,052","6,312",Yes,representative
+visconti_1,"Visconti (2017), Chile",210,"3,360",Yes,convenience
+armendariz_1,"Armendariz et al. (2018), USA","1,495","2,990",No,convenience
+atkeson_1,"Atkeson and Hamel (2018), USA","1,500","3,000",No,convenience
+bermeo_1,"Bermeo and Bhatia (2017), Afghanistan","2,485","7,455",No,representative
+crowder-meyer_1,"Crowder-Meyer et al. (2015), MTurk",430,"1,290",No,convenience
+crowder-meyer_2,"Crowder-Meyer et al. (2015), UC Merced",350,"1,050",No,student
+fox_2,"Fox and Smith (1998), UCSB",650,"2,600",No,student
+fox_1,"Fox and Smith (1998), University of Wyoming",990,"3,960",No,student
+holbolt_1,"Hobolt and Rodon (2020), UK, YouGov","1,936","19,360",No,representative
+horiuchi_1,"Horiuchi et al. (2017), Japan","2,200","22,000",No,convenience
+kage_1,"Kage et al. (2018), Japan","1,611","9,666",No,representative
+kang_1,"Kang et al. (2018), Australia","2,290","4,580",No,representative
+ono_1,"Ono and Burden (2018), USA, SSI","1,583","15,830",No,representative
+piliavin_1,"Piliavin (1987), USA",245,245,No,student
+schuler_1,"Schuler (2020), Vietnam","13,576","27,152",No,representative
+sigelman_1,"Sigelman and Sigelman, (1982), USA",227,227,No,student
+tomz_1,"Tomz and Van Houweling (2016), USA","4,200","25,200",No,representative
+vivyan_1,"Vivyan and Wagner (2015), UK, YouGov - 2012","1,899","1,899",No,representative
+vivyan_2,"Vivyan and Wagner (2015), UK, YouGov - 2013","1,919","1,919",No,representative
+wuest_1,"Wuest and Pontusson (2017), Switzerland","4,500","9,000",No,representative
+total,Total,"120,601","774,971",48,

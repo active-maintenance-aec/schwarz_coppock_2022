@@ -1,6 +1,7 @@
 # schwarz_coppock_2022/maintained/figure_4_cate_respondent_pid.R
 # Output: output/figure_4_cate_respondent_pid.pdf, output/figure_4_cate_respondent_pid.png,
-#   output/figure_4_meta_summary.csv, output/figure_4_diff_in_cates_resp_pid.csv
+#   output/figure_4_meta_summary.csv, output/figure_4_diff_in_cates_resp_pid.csv,
+#   output/figure_4_plotted_estimates.csv
 # Depends on: original/resp_pid_cate_estimates.rds, helpers.R
 # Description: Figure 4, CATEs of candidate gender by respondent party identification
 #   across the 20 US studies that recorded it, with the two difference tests.
@@ -67,6 +68,17 @@ gg_df <- resp_pid |>
       levels = c(levels(difference_df$study_name_short_fac), "Random-effects meta-analysis")
     )
   )
+
+# The figure prints an estimate and standard error beside every row of all three panels,
+# so those 58 labels are published numbers and are written out here.
+write_csv(
+  gg_df |>
+    transmute(panel = resp_pid_3, study_id = replace_na(study_id, "pooled"),
+              study_name_short = as.character(study_name_short),
+              estimate_100, std.error_100, se_entry) |>
+    arrange(panel, desc(estimate_100)),
+  here::here("maintained", "output", "figure_4_plotted_estimates.csv")
+)
 
 g <- ggplot(gg_df, aes(x = estimate_100, y = study_name_short)) +
   geom_point(alpha = 0.8, stroke = 0) +

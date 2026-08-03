@@ -11,8 +11,8 @@ schwarz_coppock_2022,2,figure_1,n_studies,67,67,1,67,1,,Figure 1 caption: result
 schwarz_coppock_2022,2,text,n_positive,47,47,1,47,1,,Text: 47 estimates are positive
 schwarz_coppock_2022,2,text,n_negative,19,18,0,19,0,paper_internal,"Text: 18 are negative. The deposit has 19 negative, one exactly zero and 47 positive, which sums to 67; the published 47 plus 18 sums to 65"
 schwarz_coppock_2022,2,text,n_exactly_zero,1,1,1,1,1,,"Text: a third comes in precisely at 0.0 (Horiuchi, Smith, and Yamamoto)"
-schwarz_coppock_2022,2,text,n_pos_and_sig_ci_rule,29,23,0,29,0,paper_internal,"Text: 47 estimates are positive (23 significant). The archive script's rule, a confidence interval excluding zero, gives 29"
-schwarz_coppock_2022,2,text,n_neg_and_sig_ci_rule,6,11,0,6,0,paper_internal,Text: 18 are negative (11 significant). The archive script's rule gives 6
+schwarz_coppock_2022,2,text,n_pos_and_sig_ci_rule,29,23,0,29,0,unresolved,"Text: 47 estimates are positive (23 significant). No significance rule the deposit supports gives 23. Both counts rise as a threshold is relaxed, so no threshold gives 23 and 11 at once: the interval rule the archive uses gives 29 and 6, and reaching 11 negative would leave 44 positive"
+schwarz_coppock_2022,2,text,n_neg_and_sig_ci_rule,6,11,0,6,0,unresolved,Text: 18 are negative (11 significant). The archive's interval rule gives 6 and no rule reaches 11; see the note on the positive count
 schwarz_coppock_2022,2,text,n_pos_and_sig_p05_rule,19,,,19,,,"Not a published quantity. Recorded because the p below 0.05 rule is the other reading of the parenthetical, and it gives 19 rather than the published 23; 19 of the 67 rows carry no p-value at all"
 schwarz_coppock_2022,2,text,n_neg_and_sig_p05_rule,2,,,2,,,Not a published quantity. The p below 0.05 rule gives 2 rather than the published 11
 schwarz_coppock_2022,2,text,prop_positive,0.7014925373134329,0.75,0,0.7014925373134329,0,paper_internal,"Discussion states more than three-fourths of the studies show a positive effect. value_paper records that lower bound rather than an equality; 47 of 67 is 0.701, so the claim does not hold"
@@ -68,7 +68,7 @@ schwarz_coppock_2022,2,figure_2,white_cand_ci_high_pp,3.6248268172222686,,,3.624
 schwarz_coppock_2022,2,figure_2,n_studies,16,16,1,16,1,,Text: a large number of studies (16) over which to pool; both Figure 2 panels show 16 rows
 schwarz_coppock_2022,2,figure_2,diff_in_cates_estimate_pp,1.319187465824557,,,1.3191874658245588,,,The difference is discussed but not stated as a number
 schwarz_coppock_2022,2,figure_2,diff_in_cates_pvalue,0.10442580239427804,0.104,1,0.1044258023942776,1,,Text: the difference between these two estimates is not statistically significant (p = .104)
-schwarz_coppock_2022,2,figure_3,female_resp_estimate_pp,3.005785735908717,3,1,3.0057857359087192,1,,Figure 3 summary label and text for Female respondents
+schwarz_coppock_2022,2,figure_3,female_resp_estimate_pp,3.005785735908717,3.0,1,3.0057857359087192,1,,Figure 3 summary label and text for Female respondents
 schwarz_coppock_2022,2,figure_3,female_resp_se_pp,0.532093754832003,0.5,1,0.532093754832003,1,,Figure 3 summary label for Female respondents
 schwarz_coppock_2022,2,figure_3,female_resp_ci_low_pp,1.962901140039305,,,1.962901140039307,,,"Figure 3 prints the estimate and standard error, not the interval bounds"
 schwarz_coppock_2022,2,figure_3,female_resp_ci_high_pp,4.04867033177813,,,4.0486703317781325,,,"Figure 3 prints the estimate and standard error, not the interval bounds"
