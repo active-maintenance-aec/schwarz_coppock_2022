@@ -144,7 +144,29 @@ entries <- tribble(
     "The deposited respondent-gender file carries {n_resp_gender} studies, and the published ",
     "figure itself draws {n_resp_gender} rows in each of its two panels. Figure 3 is correct ",
     "as printed and is not reproduced here; only the sentence describing it miscounts. ",
-    "Nothing plotted is affected and neither pooled estimate moves.")
+    "Nothing plotted is affected and neither pooled estimate moves."),
+
+  5, "bibliographic", "reference_audit", "brief",
+  "The Clayton and Nyhan (2020) manuscript has six authors",
+  "published p. 666",
+  paste(
+    "[[Clayton, Katherine, and Brendan Nyhan]]. 2020. \"Who Will Defend Democracy? ",
+    "Evaluating Tradeoffs in Candidate Support among Partisan Donors and Voters.\" ",
+    "Unpublished manuscript."),
+  paste(
+    "Carey, John, Katherine Clayton, Gretchen Helmke, Brendan Nyhan, Mitchell Sanders, and ",
+    "Susan Stokes. 2020. \"Who Will Defend Democracy? Evaluating Tradeoffs in Candidate ",
+    "Support among Partisan Donors and Voters.\" Unpublished manuscript."),
+  paste(
+    "The manuscript at the URL the entry itself prints carries six authors on its title",
+    "page, in the alphabetical order given above. Crossref, doi 10.33774/apsa-2019-wjva3-v4:",
+    "Nyhan, Helmke, Sanders, Clayton, Carey, Stokes, and the same six on every posted",
+    "version of the preprint. The short form is therefore Carey et al. (2020), which the",
+    "article uses as a study label in six further places: two rows of Table 1, two rows of",
+    "the appendix's study table, and the titles of appendix Figures A.16 and A.17. The",
+    "appendix's own reference list carries the same two-author entry. Only the labels change:",
+    "no estimate, standard error, sample size or study is affected, and neither of the two",
+    "experiments the label names is misidentified.")
 ) |>
   mutate(across(c(title, published, corrected, note), as.character))
 
@@ -155,9 +177,9 @@ bold <- function(x) str_replace_all(x, "\\[\\[(.*?)\\]\\]", "**\\1**")
 plain <- function(x) str_remove_all(x, "\\[\\[|\\]\\]")
 ```
 
-This note lists `r spelled(nrow(entries))` errors in "What Have We Learned about Gender from Candidate Choice Experiments? A Meta-Analysis of Sixty-Seven Factorial Survey Experiments," published in *The Journal of Politics* 84(2), doi [10.1086/716290](https://doi.org/10.1086/716290). **None of them changes a conclusion of the paper.** They are recorded because the numbers themselves are wrong and a reader who quoted them would be misled.
+This note lists `r spelled(nrow(entries))` errors in "What Have We Learned about Gender from Candidate Choice Experiments? A Meta-Analysis of Sixty-Seven Factorial Survey Experiments," published in *The Journal of Politics* 84(2), doi [10.1086/716290](https://doi.org/10.1086/716290). **None of them changes a conclusion of the paper.** They are recorded because the published record is wrong and a reader who quoted it would be misled.
 
-Every corrected value below is computed from the deposited replication archive ([10.7910/DVN/R27ULT](https://doi.org/10.7910/DVN/R27ULT)) at the time this document is rendered. The maintained code is at [github.com/active-maintenance-aec/schwarz_coppock_2022](https://github.com/active-maintenance-aec/schwarz_coppock_2022).
+Every corrected value in entries 1 to `r max(entries$entry[entries$class != "bibliographic"])` is computed from the deposited replication archive ([10.7910/DVN/R27ULT](https://doi.org/10.7910/DVN/R27ULT)) at the time this document is rendered. Entry `r entries$entry[entries$class == "bibliographic"]` corrects a reference-list entry, which the deposit cannot speak to, and is verified instead against the cited manuscript's own title page and the authoritative record at Crossref. The maintained code is at [github.com/active-maintenance-aec/schwarz_coppock_2022](https://github.com/active-maintenance-aec/schwarz_coppock_2022).
 
 ```{r entry-1, results="asis"}
 # The one entry that quotes two passages: one row, two pages, two published-corrected pairs.
@@ -200,6 +222,12 @@ knitr::include_graphics("maintained/output/figure_a18_costa_1_legible.pdf")
 e <- entries |> filter(entry == 4)
 cat("\n\n## 4. ", e$title, "\n\nPublished, ", str_remove(e$location, "^published "), ":\n\n> ",
     bold(e$published), "\n\nCorrected:\n\n> ", bold(e$corrected), "\n\n", e$note, "\n", sep = "")
+```
+
+```{r entry-5, results="asis"}
+e <- entries |> filter(entry == 5)
+cat("\n\n## 5. ", e$title, "\n\nPublished, ", str_remove(e$location, "^published "), ":\n\n> ",
+    bold(e$published), "\n\nCorrected:\n\n> ", e$corrected, "\n\n", e$note, "\n", sep = "")
 ```
 
 ```{r emit-spine}

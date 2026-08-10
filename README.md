@@ -122,13 +122,13 @@ Published numbers the deposit does not reproduce.
 
 6 are the article contradicting its own data. Five of those are in
 `errata.qmd`, which renders to `schwarz_coppock_2022_errata.pdf` and
-sets out four numbered items with every correction computed from the
-deposit at render time; the sixth is the row count of appendix Table
-A.1, which is a defect in a table rather than in a sentence and is
-described below. 2 are the deposit disagreeing with the page. The
-remaining 7 are unresolved, in the strict sense that the cause cannot be
-established from the deposit and guessing at one would be worse than
-saying so.
+sets out five numbered items, four of them computed from the deposit at
+render time and one a reference-list correction the deposit cannot
+reach; the sixth is the row count of appendix Table A.1, which is a
+defect in a table rather than in a sentence and is described below. 2
+are the deposit disagreeing with the page. The remaining 7 are
+unresolved, in the strict sense that the cause cannot be established
+from the deposit and guessing at one would be worse than saying so.
 
 **One published figure prints no data at all.** Appendix Figure A.18 is
 Costa (2020), whose randomized attribute levels are whole tweets. At the
@@ -235,8 +235,15 @@ the single largest change the maintained rewrite makes.
 This section documents corrections the maintained rewrite makes to the
 deposited code. Errors in the article itself are a separate document:
 `errata.qmd`, which renders to `schwarz_coppock_2022_errata.pdf`, sets
-out the four corrections one by one, with each computed from the deposit
-at render time.
+out the five corrections one by one, with each of the four numeric ones
+computed from the deposit at render time. The one other is
+bibliographic: a sweep of all 119 printed references against Crossref
+drew a single flag and it is real, the entry for the Clayton and Nyhan
+(2020) manuscript naming two of its six authors. The manuscript at the
+URL that entry itself prints is by Carey, Clayton, Helmke, Nyhan,
+Sanders and Stokes, so the short form the article uses as a study label
+in Table 1, the appendix study table and Figures A.16 and A.17 should
+read Carey et al. (2020). No estimate or sample size is affected.
 
 **The Independent-versus-Republican p-value is computed from the wrong
 statistic.** In `meta_analyze_cates_resp_pid.R`, the block that tests
