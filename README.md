@@ -150,7 +150,7 @@ because 19 of the 67 rows carry no p-value at all. Nor is this a matter
 of finding the right threshold: both counts rise as a threshold is
 relaxed, so no threshold produces 23 and 11 together. The threshold that
 puts 23 estimates in the positive column leaves 5 in the negative one,
-and the threshold that reaches 11 in the negative column leaves 44 in
+and the threshold that reaches 11 in the negative column leaves 43 in
 the positive one. No corrected value can be stated, so none is; this is
 recorded as unresolved rather than as an erratum.
 
@@ -235,8 +235,8 @@ the single largest change the maintained rewrite makes.
 This section documents corrections the maintained rewrite makes to the
 deposited code. Errors in the article itself are a separate document:
 `errata.qmd`, which renders to `schwarz_coppock_2022_errata.pdf`, sets
-out the three misstated sentences one by one, with the correction
-computed from the deposit at render time.
+out the four corrections one by one, with each computed from the deposit
+at render time.
 
 **The Independent-versus-Republican p-value is computed from the wrong
 statistic.** In `meta_analyze_cates_resp_pid.R`, the block that tests
