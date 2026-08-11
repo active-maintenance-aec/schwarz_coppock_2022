@@ -46,6 +46,9 @@ positives_there <- sum(studies$estimate > 0 & z >= threshold_11_negative)
 
 appendix_cells <- read_csv(here("maintained", "output", "figure_a2_a45_plotted_estimates.csv"),
                            show_col_types = FALSE)
+# One per-study figure per study in the meta-analysis, so the count of distinct figures is
+# how many rows Table A.1 should have.
+n_ta1_expected <- n_distinct(appendix_cells$figure_number)
 n_costa <- sum(appendix_cells$figure_number == 18)
 n_appendix_cells <- 2 * sum(appendix_cells$figure_number != 18)
 
@@ -66,8 +69,11 @@ spelled <- function(n) {
 # resolves it its own way: bold here, \was{} in an edition. Everything else in a field is
 # literal text.
 #
-# Numbering is the published note's and is APPEND-ONLY: an entry number may already have been
-# cited, so a later finding is added at the end and never interleaved, merged or split.
+# Numbering orders entries by kind and by severity, and MAY be changed. Append-only was the
+# earlier rule, on the theory that a published entry number could already have been cited;
+# reversed 2026-08-10, since these notes are not so widely circulated that a renumber costs
+# anything. Discover first, order last. A renumber may change `entry`; it must never change
+# which claim_ids an entry claims.
 #
 # Entry 1 corrects the same overstatement in two places, so its published and corrected
 # fields each hold two passages joined by a blank line, and its location holds both pages
@@ -107,27 +113,34 @@ entries <- tribble(
   "text_prop_positive",
 
   2, "quantity", "pipeline", "full",
-  "The count of negative estimates omits two studies",
+  "The counts of negative and of significant estimates",
   "published p. 662",
-  "We see a very consistent pattern in favor of women candidates on average: 47 estimates are positive (23 significant) and [[18]] are negative (11 significant).",
-  str_glue("We see a very consistent pattern in favor of women candidates on average: 47 estimates are positive (23 significant) and [[{n_negative}]] are negative (11 significant)."),
+  "We see a very consistent pattern in favor of women candidates on average: 47 estimates are positive ([[23]] significant) and [[18]] are negative ([[11]] significant).",
+  str_glue(
+    "We see a very consistent pattern in favor of women candidates on average: 47 estimates ",
+    "are positive ([[{counts$n_pos_sig_ci}]] significant) and [[{n_negative}]] are negative ",
+    "([[{counts$n_neg_sig_ci}]] significant)."),
   str_glue(
     "The deposited estimates divide into {n_positive} positive, {n_negative} negative and ",
     "{n_zero} exactly zero, which is the only division summing to 67. The published 47 plus ",
     "18 sums to 65.",
     "\n\n",
-    "The two parenthetical counts of significant estimates are left as published, because no ",
-    "corrected value for them can be stated. They correspond to no significance rule the ",
+    "The corrected counts of significant estimates are those of the confidence interval rule ",
+    "the deposited script itself applies, which gives {counts$n_pos_sig_ci} and ",
+    "{counts$n_neg_sig_ci}. The published 23 and 11 correspond to no significance rule the ",
     "deposited estimates support, and not merely to a rule with a different threshold: both ",
     "counts rise as a threshold is relaxed, so no threshold can produce 23 and 11 at once. ",
     "Tightening the threshold until only 23 positive estimates remain significant leaves ",
     "{negatives_there} negative ones; loosening it until 11 negative estimates are ",
-    "significant leaves {positives_there} positive ones. The confidence interval rule the ",
-    "deposited script itself applies gives {counts$n_pos_sig_ci} and {counts$n_neg_sig_ci}, ",
-    "and a test of p below 0.05 gives {counts$n_pos_sig_p05} and {counts$n_neg_sig_p05} and ",
-    "cannot be what was done in any case, because {counts$n_missing_p} of the 67 studies ",
-    "carry no p-value. The repository records this as unresolved rather than corrected."),
-  "text_n_negative",
+    "significant leaves {positives_there} positive ones. A test of p below 0.05 gives ",
+    "{counts$n_pos_sig_p05} and {counts$n_neg_sig_p05}, and cannot be what was done in any ",
+    "case, because {counts$n_missing_p} of the 67 studies carry no p-value. What procedure ",
+    "produced the published pair is therefore unknown; the correction states what the ",
+    "deposited rule gives.",
+    "\n\n",
+    "The direction of the correction favours the article's own claim: more positive estimates ",
+    "reach significance than were reported, and fewer negative ones."),
+  "text_n_negative;text_n_pos_and_sig_ci_rule;text_n_neg_and_sig_ci_rule",
 
   3, "float", "pipeline", "full",
   "Appendix Figure A.18 prints none of its estimates",
@@ -158,7 +171,22 @@ entries <- tribble(
     "Nothing plotted is affected and neither pooled estimate moves."),
   "figure_3_n_studies_in_text",
 
-  5, "bibliographic", "reference_audit", "brief",
+  5, "structural", "pipeline", "brief",
+  "Appendix Table A.1 omits one of the studies it summarizes",
+  "published appendix p. A.1",
+  "Table A.1 lists [[43]] studies.",
+  str_glue("Table A.1 should list [[{n_ta1_expected}]] studies."),
+  str_glue(
+    "The appendix carries {n_ta1_expected} per-study CATE figures, A.2 through A.45, one for ",
+    "each study in the meta-analysis. Simas and Murdoch (2019) is plotted at Figure A.44 and ",
+    "has no row in Table A.1, so the table describes 43 of the {n_ta1_expected}. The study is ",
+    "present in the deposited data and in every pooled estimate; only the summary table ",
+    "omits it."),
+  # The ground truth keys this claim as table_a1_n_studies_listed; published_claims.csv keys
+  # the same claim as "table_a1 :: n_studies_listed". claim_ids points at the ground truth.
+  "table_a1_n_studies_listed",
+
+  6, "bibliographic", "reference_audit", "brief",
   "The Clayton and Nyhan (2020) manuscript has six authors",
   "published p. 666",
   paste(
@@ -240,6 +268,12 @@ cat("\n\n## 4. ", e$title, "\n\nPublished, ", str_remove(e$location, "^published
 ```{r entry-5, results="asis"}
 e <- entries |> filter(entry == 5)
 cat("\n\n## 5. ", e$title, "\n\nPublished, ", str_remove(e$location, "^published "), ":\n\n> ",
+    bold(e$published), "\n\nCorrected:\n\n> ", bold(e$corrected), "\n\n", e$note, "\n", sep = "")
+```
+
+```{r entry-6, results="asis"}
+e <- entries |> filter(entry == 6)
+cat("\n\n## 6. ", e$title, "\n\nPublished, ", str_remove(e$location, "^published "), ":\n\n> ",
     bold(e$published), "\n\nCorrected:\n\n> ", e$corrected, "\n\n", e$note, "\n", sep = "")
 ```
 
