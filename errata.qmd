@@ -76,8 +76,16 @@ spelled <- function(n) {
 # `form` is a renderer's choice of treatment: "full" where the published and corrected
 # fields are whole sentences that need setting as blocks, "brief" where the entry is a token
 # replacement.
+# `claim_ids` names the ground truth rows the entry corrects, semicolon separated, and it is
+# what makes "has this finding been published?" a query over the corpus rather than a reading
+# of every note. It is empty where the entry has no ground truth row: a reference list is not
+# an extraction claim, and neither is a figure that failed to print. A row an entry discusses
+# but declines to correct is not listed either, which is why entry 2 carries only the count of
+# negative estimates and not the two significance counts it leaves unresolved. Every id listed
+# here is checked against the ground truth by ground_truth/build_ground_truth.R, which refuses
+# to finish on a dangling one.
 entries <- tribble(
-  ~entry, ~class, ~source, ~form, ~title, ~location, ~published, ~corrected, ~note,
+  ~entry, ~class, ~source, ~form, ~title, ~location, ~published, ~corrected, ~note, ~claim_ids,
 
   1, "quantity", "pipeline", "full",
   "The share of studies with a positive effect is overstated, in two places",
@@ -96,6 +104,7 @@ entries <- tribble(
     "{sprintf('%.1f', 100 * share_positive)} per cent, which is below three-fourths rather ",
     "than above it. The claim the two sentences make is unaffected: positive effects are the ",
     "large majority."),
+  "text_prop_positive",
 
   2, "quantity", "pipeline", "full",
   "The count of negative estimates omits two studies",
@@ -118,6 +127,7 @@ entries <- tribble(
     "and a test of p below 0.05 gives {counts$n_pos_sig_p05} and {counts$n_neg_sig_p05} and ",
     "cannot be what was done in any case, because {counts$n_missing_p} of the 67 studies ",
     "carry no p-value. The repository records this as unresolved rather than corrected."),
+  "text_n_negative",
 
   3, "float", "pipeline", "full",
   "Appendix Figure A.18 prints none of its estimates",
@@ -134,6 +144,7 @@ entries <- tribble(
     "Nothing is wrong with the estimates themselves; they are in the deposited archive and",
     "are unchanged. [[The figure as it should have appeared]]:"),
   "",
+  "",
 
   4, "quantity", "pipeline", "full",
   str_glue("Figure 3 covers {n_resp_gender} experiments, not 36"),
@@ -145,6 +156,7 @@ entries <- tribble(
     "figure itself draws {n_resp_gender} rows in each of its two panels. Figure 3 is correct ",
     "as printed and is not reproduced here; only the sentence describing it miscounts. ",
     "Nothing plotted is affected and neither pooled estimate moves."),
+  "figure_3_n_studies_in_text",
 
   5, "bibliographic", "reference_audit", "brief",
   "The Clayton and Nyhan (2020) manuscript has six authors",
@@ -166,9 +178,10 @@ entries <- tribble(
     "the appendix's study table, and the titles of appendix Figures A.16 and A.17. The",
     "appendix's own reference list carries the same two-author entry. Only the labels change:",
     "no estimate, standard error, sample size or study is affected, and neither of the two",
-    "experiments the label names is misidentified.")
+    "experiments the label names is misidentified."),
+  ""
 ) |>
-  mutate(across(c(title, published, corrected, note), as.character))
+  mutate(across(c(title, published, corrected, note, claim_ids), as.character))
 
 stopifnot(nrow(entries) == max(entries$entry), !anyDuplicated(entries$entry))
 

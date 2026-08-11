@@ -526,6 +526,42 @@ if (nrow(disagreements) > 0) {
 
 write_csv(gt, here::here("ground_truth", "published_claims_reproduction.csv"))
 
+# The hand-maintained ground truth's claim ids ----
+# ground_truth/schwarz_coppock_2022_ground_truth.csv is written by hand rather than
+# generated here, so nothing else guarantees that its claim_id column stays in step with the
+# table_figure and claim it is built from. It is checked rather than regenerated: the id is
+# the two columns joined by an underscore, and it has to be unique, because the errata spine
+# addresses these rows by id.
+hand_gt <- read_csv(here::here("ground_truth", "schwarz_coppock_2022_ground_truth.csv"),
+                    col_types = cols(.default = col_character()))
+
+stopifnot(
+  "claim_id" %in% names(hand_gt),
+  !any(duplicated(hand_gt$claim_id)),
+  all(hand_gt$claim_id == str_c(hand_gt$table_figure, "_", hand_gt$claim))
+)
+
+# Errata spine gate ----
+# errata.qmd names, for each published entry, the ground truth rows that entry corrects. An
+# id that no longer exists is a typo or a renamed claim, and a dangling reference in a
+# document whose whole purpose is correcting the record is worse than a build that refuses.
+errata_path <- here::here("errata_entries.csv")
+if (file.exists(errata_path)) {
+  errata_ids <- read_csv(errata_path, show_col_types = FALSE) |>
+    pull(claim_ids) |>
+    str_split(";") |>
+    unlist() |>
+    str_trim()
+  errata_ids <- errata_ids[!is.na(errata_ids) & errata_ids != ""]
+  dangling_errata_ids <- setdiff(errata_ids, hand_gt$claim_id)
+  if (length(dangling_errata_ids) > 0) {
+    stop("errata_entries.csv lists claim ids absent from the ground truth: ",
+         paste(dangling_errata_ids, collapse = ", "))
+  }
+  print(str_glue("Errata spine: {length(unique(errata_ids))} distinct claim ids listed, ",
+                 "all present in the ground truth."))
+}
+
 # Summary ----
 print(gt |>
         summarize(claims = n(),
