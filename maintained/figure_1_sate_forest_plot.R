@@ -56,12 +56,18 @@ g <- ggplot(gg_df, aes(x = estimate_100, y = study_name_short)) +
   geom_rect(
     data = summary_df,
     aes(xmin = conf.low_100, xmax = conf.high_100, x = NULL, y = NULL),
-    ymin = 0, ymax = 100, alpha = 0.1
+    # -Inf/Inf, not 0/100: the band is meant to run the height of the panel, and
+    # a rect drawn to y = 100 makes every panel 100 discrete units tall under
+    # scales = "free_y", which space = "free" then honours. That gave the
+    # one-row meta-analysis panel the same height as the panel holding every
+    # study, halving the room the study labels had and printing them over one
+    # another.
+    ymin = -Inf, ymax = Inf, alpha = 0.1
   ) +
   geom_text(
     x = 20,
     aes(y = study_name_short, label = se_entry),
-    hjust = 1, size = 2.5, nudge_y = 0.25
+    hjust = 1, size = 2, nudge_y = 0.25
   ) +
   coord_cartesian(xlim = c(-20, 20)) +
   xlab("ATE estimate in percentage points") +
@@ -70,7 +76,9 @@ g <- ggplot(gg_df, aes(x = estimate_100, y = study_name_short)) +
   theme(
     axis.title.y = element_blank(),
     axis.title.x = element_text(size = 8),
-    axis.text.y = element_text(size = 8),
+    # 67 rows over about 7.2in of panel is a 7.7pt pitch, so the 8pt these
+    # labels used to be set at could not clear its own neighbours.
+    axis.text.y = element_text(size = 5),
     legend.position = "none",
     strip.background = element_blank(),
     strip.text = element_blank()
