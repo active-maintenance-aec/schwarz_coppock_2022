@@ -52,6 +52,29 @@ n_ta1_expected <- n_distinct(appendix_cells$figure_number)
 n_costa <- sum(appendix_cells$figure_number == 18)
 n_appendix_cells <- 2 * sum(appendix_cells$figure_number != 18)
 
+# R11. Entry 2 changes which estimates count as significant, so every sentence that rests on
+# a significance verdict is re-asked under the corrected rule rather than left to the reader.
+# The article asserts a verdict for three studies one at a time, all on published p. 661, and
+# each is recomputed here from the deposit.
+named_verdicts <- studies |>
+  filter(study_id %in% c("ono_yamada_1", "kage_1", "horiuchi_1")) |>
+  mutate(verdict = case_when(
+    conf.high < 0 ~ "negative and significant",
+    conf.low > 0 ~ "positive and significant",
+    estimate == 0 ~ "exactly zero",
+    TRUE ~ "not significant"))
+verdict_of <- function(id) named_verdicts$verdict[named_verdicts$study_id == id]
+n_named_holding <- sum(named_verdicts$verdict %in%
+                         c("negative and significant", "positive and significant",
+                           "exactly zero"))
+
+# Simas and Murdoch (2019) is the study entry 5 finds missing from Table A.1. Whether that
+# omission reaches Figure A.1, which the appendix defines as the distribution of the CATEs
+# "conditional on each of the attributes listed in Table A.1", is a question about how much
+# of that distribution the unlisted study accounts for.
+n_all_cates <- nrow(appendix_cells)
+n_simas_cates <- sum(appendix_cells$study_id == "simas_1")
+
 # The prose spells small counts out, so the spine's row count has to be spelled too.
 spelled <- function(n) {
   words <- c("one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten")
@@ -139,7 +162,16 @@ entries <- tribble(
     "deposited rule gives.",
     "\n\n",
     "The direction of the correction favours the article's own claim: more positive estimates ",
-    "reach significance than were reported, and fewer negative ones."),
+    "reach significance than were reported, and fewer negative ones.",
+    "\n\n",
+    "A count of significant estimates is the warrant for the sentences that follow it, so ",
+    "those were re-asked under the corrected rule. The article asserts a significance verdict ",
+    "for three studies one at a time, all on published p. 661, and all three keep the verdict ",
+    "it gives them: Ono and Yamada is {verdict_of('ono_yamada_1')}, Kage, Rosenbluth, and ",
+    "Tanaka is {verdict_of('kage_1')}, and Horiuchi, Smith, and Yamamoto is ",
+    "{verdict_of('horiuchi_1')}. The same paragraph names five further contexts as showing ",
+    "negative effects and claims significance for none of them, and the deposit gives a ",
+    "negative estimate in every one. No sentence in the article changes."),
   "text_n_negative;text_n_pos_and_sig_ci_rule;text_n_neg_and_sig_ci_rule",
 
   3, "float", "pipeline", "full",
@@ -156,7 +188,12 @@ entries <- tribble(
   paste(
     "Nothing is wrong with the estimates themselves; they are in the deposited archive and",
     "are unchanged. [[The figure as it should have appeared]]:"),
-  "",
+  str_glue(
+    "The appendix promises this figure in terms: it closes its introduction by saying that ",
+    "in the remainder \"we show the study-by-study estimates that make up Figure A.1\". For ",
+    "Costa (2020) it shows none of the {n_costa}, which is the one place in the appendix ",
+    "where that sentence does not hold. Figure A.1 itself is unaffected, since it is drawn ",
+    "from the estimates rather than from these figures."),
   "",
 
   4, "quantity", "pipeline", "full",
@@ -181,7 +218,15 @@ entries <- tribble(
     "each study in the meta-analysis. Simas and Murdoch (2019) is plotted at Figure A.44 and ",
     "has no row in Table A.1, so the table describes 43 of the {n_ta1_expected}. The study is ",
     "present in the deposited data and in every pooled estimate; only the summary table ",
-    "omits it."),
+    "omits it.",
+    "\n\n",
+    "The omission is not confined to the table. The appendix introduces Figure A.1 as the ",
+    "distribution of the CATEs \"conditional on each of the attributes listed in Table A.1\", ",
+    "so the table is where a reader learns what that figure covers, and the unlisted study ",
+    "contributes {n_simas_cates} of the figure's {n_all_cates} conditional effects. Two ",
+    "estimates in {n_all_cates} cannot move the distribution, so the appendix's takeaway from ",
+    "Figure A.1 stands as written. What the missing row costs is the account of one study's ",
+    "attributes, which is the whole of what Table A.1 exists to give."),
   # The ground truth keys this claim as table_a1_n_studies_listed; published_claims.csv keys
   # the same claim as "table_a1 :: n_studies_listed". claim_ids points at the ground truth.
   "table_a1_n_studies_listed",
@@ -207,20 +252,105 @@ entries <- tribble(
     "appendix's own reference list carries the same two-author entry. Only the labels change:",
     "no estimate, standard error, sample size or study is affected, and neither of the two",
     "experiments the label names is misidentified."),
+  "",
+
+  7, "bibliographic", "authors_archive", "brief",
+  "An appendix reference prints a URL cut off at the edge of the page",
+  "published appendix p. 37",
+  paste0(
+    "https://preprints.apsanet.org/engage/api-gateway/apsa/assets/orp/resource/item/",
+    "[[5d02becd39ef04]]will-defend-democracy-evaluating-tradeoffs-in-candidate-support-",
+    "among-partisan-donors-and-voters.pdf"),
+  paste0(
+    "https://preprints.apsanet.org/engage/api-gateway/apsa/assets/orp/resource/item/",
+    "[[5d02becd39ef0400184a49fd/original/who-]]will-defend-democracy-evaluating-tradeoffs-",
+    "in-candidate-support-among-partisan-donors-and-voters.pdf"),
+  paste(
+    "The line the appendix sets this URL on runs 206pt past the right edge of the paper, so",
+    "23 characters of it are drawn where no reader can see them and the printed URL leads",
+    "nowhere. Two independent records give the same missing span: the authors' own",
+    "gender.bib in the archived working folder, and the ARTICLE'S OWN reference list on",
+    "published p. 666, which prints the whole URL because its two-column measure broke the",
+    "line somewhere else. Nothing but the URL changes: the entry names the same manuscript,",
+    "which is the one entry 6 corrects the authorship of."),
+  "",
+
+  8, "bibliographic", "authors_archive", "brief",
+  "An appendix reference prints a URL with a character missing",
+  "published appendix p. 39",
+  paste0(
+    "https://web.stanford.edu/[[ ]]tomz/working/Tomz-VH-Repositioning-Conjoint-2016-04.pdf"),
+  paste0(
+    "https://web.stanford.edu/[[~]]tomz/working/Tomz-VH-Repositioning-Conjoint-2016-04.pdf"),
+  paste(
+    "The tilde is drawn as a blank: the published page shows a gap at 300 dpi and the text",
+    "layer returns a space, so the character is absent from the document rather than lost in",
+    "reading it. Without it the URL is not a personal-directory URL and does not resolve. The",
+    "authors' own gender.bib in the archived working folder carries the tilde. The article's",
+    "reference list cites a different address for the same manuscript and so cannot settle",
+    "this one."),
+  "",
+
+  9, "typographic", "published_page", "brief",
+  "A plural noun where the sentence wants a modifier",
+  "published p. 664",
+  paste(
+    "Finally, we consider the effects of gender, conditional on respondent characteristics,",
+    "in particular by gender and [[partisans]] affiliations."),
+  paste(
+    "Finally, we consider the effects of gender, conditional on respondent characteristics,",
+    "in particular by gender and [[partisan]] affiliations."),
+  paste(
+    "The error is the authors' own and survived a copy-edit that touched the same sentence:",
+    "the submitted manuscript in the archived working folder carries the same words but opens",
+    "them \"Lastly\" where the page prints \"Finally\". The same paper writes \"candidate partisan",
+    "affiliation\" correctly on published p. 657. One letter changes and nothing else does: no",
+    "estimate, count, figure or study is affected, and the sentence means what a reader",
+    "already takes it to mean."),
+  "",
+
+  10, "presentation", "published_page", "full",
+  "Three figure captions key panel letters the authors' own figures do not print",
+  "published p. 663; published p. 664; published p. 664",
+  paste(
+    "Figure 2. Conditional average effect of candidate gender, conditional on [[candidate race: A, black candidate; B, white candidate]]",
+    "Figure 3. Conditional average treatment effects of candidate gender by [[respondent gender: A, female respondents; B, male respondents]]",
+    "Figure 4. Conditional average treatment effects of candidate gender by [[respondent partisanship: A, Democratic respondents; B, Independent respondents; C, Republican respondents.]]",
+    sep = "\n\n"),
+  paste(
+    "Figure 2. Conditional average effect of candidate gender, conditional on [[candidate race]]",
+    "Figure 3. Conditional average treatment effects of candidate gender by [[respondent gender]]",
+    "Figure 4. Conditional average treatment effects of candidate gender by [[respondent partisanship]]",
+    sep = "\n\n"),
+  paste(
+    "The panel letters are the journal's and not the authors'. The deposited code draws all",
+    "three of these figures with the panels labelled in words, and the published figures",
+    "print A, B and C instead and add a key to the caption to say what the letters mean. The",
+    "correction drops the key and lets the panels name themselves, which is what the",
+    "deposited figures do. Nothing plotted differs: no estimate, standard error, interval or",
+    "study is affected, and the letters are the whole of what changes."),
   ""
 ) |>
   mutate(across(c(title, published, corrected, note, claim_ids), as.character))
 
 stopifnot(nrow(entries) == max(entries$entry), !anyDuplicated(entries$entry))
 
+# A run of entry numbers, written the way a sentence wants them. Numbered prose about the
+# entries is computed rather than typed, because a hand-typed count of one's own corrections
+# goes stale the moment an entry is added and looks no different when it does.
+run <- function(x) {
+  stopifnot(!anyDuplicated(x), max(x) - min(x) + 1 == length(x))
+  if (length(x) == 1) as.character(x) else paste0(min(x), " to ", max(x))
+}
+
 # The spine's markup, resolved for this document. Another renderer resolves it differently.
 bold <- function(x) str_replace_all(x, "\\[\\[(.*?)\\]\\]", "**\\1**")
 plain <- function(x) str_remove_all(x, "\\[\\[|\\]\\]")
 ```
 
-This note lists `r spelled(nrow(entries))` errors in "What Have We Learned about Gender from Candidate Choice Experiments? A Meta-Analysis of Sixty-Seven Factorial Survey Experiments," published in *The Journal of Politics* 84(2), doi [10.1086/716290](https://doi.org/10.1086/716290). **None of them changes a conclusion of the paper.** They are recorded because the published record is wrong and a reader who quoted it would be misled.
+This note lists `r spelled(nrow(entries))` corrections to "What Have We Learned about Gender from Candidate Choice Experiments? A Meta-Analysis of Sixty-Seven Factorial Survey Experiments," published in *The Journal of Politics* 84(2), doi [10.1086/716290](https://doi.org/10.1086/716290). **None of them changes a conclusion of the paper.** Entries `r run(entries$entry[entries$class != "presentation"])` are errors in the published record, recorded because a reader who quoted it would be misled. Entry `r run(entries$entry[entries$class == "presentation"])` is not an error but a restoration: the journal keyed three figure captions to panel letters its own compositor added, and the authors' figures label those panels by name.
 
-Every corrected value in entries 1 to `r max(entries$entry[entries$class != "bibliographic"])` is computed from the deposited replication archive ([10.7910/DVN/R27ULT](https://doi.org/10.7910/DVN/R27ULT)) at the time this document is rendered. Entry `r entries$entry[entries$class == "bibliographic"]` corrects a reference-list entry, which the deposit cannot speak to, and is verified instead against the cited manuscript's own title page and the authoritative record at Crossref. The maintained code is at [github.com/active-maintenance-aec/schwarz_coppock_2022](https://github.com/active-maintenance-aec/schwarz_coppock_2022).
+Every corrected value in entries `r run(entries$entry[entries$class %in% c("quantity", "float", "structural")])` is computed from the deposited replication archive ([10.7910/DVN/R27ULT](https://doi.org/10.7910/DVN/R27ULT)) at the time this document is rendered. Entries `r run(entries$entry[entries$class == "bibliographic"])` correct the reference list, which the deposit cannot speak to: entry `r entries$entry[entries$class == "bibliographic"][1]` is verified against the cited manuscript's own title page and the authoritative record at Crossref, and the two URLs against the authors' own bibliography file in the archived working folder, one of them against the article's own reference list as well. Entry `r run(entries$entry[entries$class == "typographic"])` is a single letter and quotes the sentence it stands in. Entry `r run(entries$entry[entries$class == "presentation"])` quotes the published captions themselves, which is the only thing that can settle what a caption says. The maintained code is at [github.com/active-maintenance-aec/schwarz_coppock_2022](https://github.com/active-maintenance-aec/schwarz_coppock_2022).
 
 ```{r entry-1, results="asis"}
 # The one entry that quotes two passages: one row, two pages, two published-corrected pairs.
@@ -245,9 +375,11 @@ cat("\n\n## 2. ", e$title, "\n\nPublished, ", str_remove(e$location, "^published
 
 ```{r entry-3, results="asis"}
 # The corrected artifact is the figure below rather than a sentence, so this entry quotes
-# nothing: its two paragraphs describe the defect and what replaces it.
+# nothing: it describes the defect, says what the appendix had promised, and introduces what
+# replaces it. The note sits between the two so the promise is read against the defect.
 e <- entries |> filter(entry == 3)
-cat("\n\n## 3. ", e$title, "\n\n", plain(e$published), "\n\n", plain(e$corrected), "\n", sep = "")
+cat("\n\n## 3. ", e$title, "\n\n", plain(e$published), "\n\n", e$note, "\n\n",
+    plain(e$corrected), "\n", sep = "")
 ```
 
 ```{r fig-a18}
@@ -275,6 +407,34 @@ cat("\n\n## 5. ", e$title, "\n\nPublished, ", str_remove(e$location, "^published
 e <- entries |> filter(entry == 6)
 cat("\n\n## 6. ", e$title, "\n\nPublished, ", str_remove(e$location, "^published "), ":\n\n> ",
     bold(e$published), "\n\nCorrected:\n\n> ", e$corrected, "\n\n", e$note, "\n", sep = "")
+```
+
+```{r entries-7-to-9, results="asis"}
+# One block for three entries rather than three copies of it: 7, 8 and 9 are all a single
+# passage at a single location, which is the shape entry 5 has, and nothing distinguishes
+# their treatment.
+walk(7:9, function(n) {
+  e <- entries |> filter(entry == n)
+  cat("\n\n## ", e$entry, ". ", e$title, "\n\nPublished, ",
+      str_remove(e$location, "^published "), ":\n\n> ", bold(e$published),
+      "\n\nCorrected:\n\n> ", bold(e$corrected), "\n\n", e$note, "\n", sep = "")
+})
+```
+
+```{r entry-panel-letters, results="asis"}
+# Three captions, one entry, on the same shape as entry 1: three locations and three
+# published-corrected pairs held in one row, because it is one correction made three times.
+e <- entries |> filter(class == "presentation")
+pages <- str_remove(str_split_1(e$location, "; "), "^published ")
+published_passages <- str_split_1(e$published, "\n\n")
+corrected_passages <- str_split_1(e$corrected, "\n\n")
+
+cat("\n\n## ", e$entry, ". ", e$title, "\n\n", sep = "")
+walk(seq_along(pages), function(i) {
+  cat("Published, ", pages[i], ":\n\n> ", bold(published_passages[i]),
+      "\n\nCorrected:\n\n> ", bold(corrected_passages[i]), "\n\n", sep = "")
+})
+cat(e$note, "\n", sep = "")
 ```
 
 ```{r emit-spine}
