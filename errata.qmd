@@ -140,7 +140,7 @@ entries <- tribble(
     "{sprintf('%.1f', 100 * share_positive)} per cent, which is below three-fourths rather ",
     "than above it. The claim the two sentences make is unaffected: positive effects are the ",
     "large majority."),
-  "text_prop_positive", NA_character_,
+  "text_prop_positive", sprintf("%.4f", share_positive),
 
   2, "quantity", "pipeline", "full",
   "The counts of negative and of significant estimates",
@@ -343,6 +343,18 @@ entries <- tribble(
 
 stopifnot(nrow(entries) == max(entries$entry), !anyDuplicated(entries$entry))
 
+# values_in_spans is FALSE where the claim's scale is not the sentence's, under PROCEDURES'
+# rule that corrected_values is always on the claim's scale. A method row or other id with
+# no number on any scale stores NA in its position. Such an entry's note must say why.
+off_claim_scale <- c(1)
+entries <- entries |>
+  mutate(values_in_spans = case_when(
+    is.na(corrected_values) ~ NA,
+    entry %in% off_claim_scale ~ FALSE,
+    .default = TRUE
+  ))
+stopifnot(all(str_length(entries$note[!replace_na(entries$values_in_spans, TRUE)]) > 0))
+
 # Gate: corrected_values agrees with the sentence it was glued into ----
 # The column and the sentence are written from one expression, so they begin in agreement
 # and this gate exists for the edit that separates them: a value moved from one marked span
@@ -365,7 +377,7 @@ inside_span <- function(value, span) {
 }
 
 quantified <- entries |>
-  filter(!is.na(corrected_values)) |>
+  filter(!is.na(corrected_values), values_in_spans) |>
   mutate(ids = str_split(claim_ids, ";"), values = str_split(corrected_values, ";"),
          spans = map(corrected, marked_spans))
 
@@ -391,11 +403,9 @@ if (!all(value_placed)) {
 # corrects nothing, so it carries NA even where its class is quantity, and an entry with no
 # claim id has no claim to carry a value for. `unvalued` lists the quantity entries whose
 # claim is not a number printed in the corrected sentence; they carry NA by decision.
-# Entry 1: the claim is the share of positive studies on the proportion scale (0.7015), and the
-# sentence prints it as a percentage, so no value is both the claim's and the printed span's.
 # Entry 2: the ids run in the ground truth's order, not the order the counts sit in the
 # sentence, so the gate accepts any value that is in some span when position does not match.
-unvalued <- c(1)
+unvalued <- integer(0)
 stopifnot(
   all(!is.na(entries$corrected_values[entries$class == "quantity" & entries$form != "note" &
                                         !is.na(entries$claim_ids) & entries$claim_ids != "" &
