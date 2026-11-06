@@ -179,7 +179,7 @@ entries <- tribble(
     "{verdict_of('horiuchi_1')}. The same paragraph names five further contexts as showing ",
     "negative effects and claims significance for none of them, and the deposit gives a ",
     "negative estimate in every one. No sentence in the article changes."),
-  "text_n_negative;text_n_pos_and_sig_ci_rule;text_n_neg_and_sig_ci_rule", str_glue("{counts$n_pos_sig_ci};{n_negative};{counts$n_neg_sig_ci}"),
+  "text_n_pos_and_sig_ci_rule;text_n_negative;text_n_neg_and_sig_ci_rule", str_glue("{counts$n_pos_sig_ci};{n_negative};{counts$n_neg_sig_ci}"),
 
   3, "float", "pipeline", "full",
   "Appendix Figure A.18 prints none of its estimates",
