@@ -122,9 +122,9 @@ Published numbers the deposit does not reproduce.
 
 6 are the article contradicting its own data. Five of those are in
 `errata.qmd`, which renders to `schwarz_coppock_2022_errata.pdf` and
-sets out five numbered items, four of them computed from the deposit at
-render time and one a reference-list correction the deposit cannot
-reach; the sixth is the row count of appendix Table A.1, which is a
+sets out 11 numbered items, five of them computed from the deposit at
+render time and the rest corrections of references, wording, and
+captions; the sixth is the row count of appendix Table A.1, which is a
 defect in a table rather than in a sentence and is described below. 2
 are the deposit disagreeing with the page. The remaining 7 are
 unresolved, in the strict sense that the cause cannot be established
@@ -235,15 +235,16 @@ the single largest change the maintained rewrite makes.
 This section documents corrections the maintained rewrite makes to the
 deposited code. Errors in the article itself are a separate document:
 `errata.qmd`, which renders to `schwarz_coppock_2022_errata.pdf`, sets
-out the five corrections one by one, with each of the four numeric ones
-computed from the deposit at render time. The one other is
-bibliographic: a sweep of all 119 printed references against Crossref
-drew a single flag and it is real, the entry for the Clayton and Nyhan
-(2020) manuscript naming two of its six authors. The manuscript at the
-URL that entry itself prints is by Carey, Clayton, Helmke, Nyhan,
-Sanders and Stokes, so the short form the article uses as a study label
-in Table 1, the appendix study table and Figures A.16 and A.17 should
-read Carey et al. (2020). No estimate or sample size is affected.
+out the 11 corrections one by one, with each of the five numeric ones
+computed from the deposit at render time. Of the three bibliographic
+entries, one comes from a sweep of all 119 printed references against
+Crossref, which drew a single flag, and it is real: the entry for the
+Clayton and Nyhan (2020) manuscript naming two of its six authors. The
+manuscript at the URL that entry itself prints is by Carey, Clayton,
+Helmke, Nyhan, Sanders and Stokes, so the short form the article uses as
+a study label in Table 1, the appendix study table and Figures A.16 and
+A.17 should read Carey et al. (2020). No estimate or sample size is
+affected.
 
 **The Independent-versus-Republican p-value is computed from the wrong
 statistic.** In `meta_analyze_cates_resp_pid.R`, the block that tests
@@ -323,8 +324,8 @@ separately, in the next section.
 | Table or figure | Claim | Article | Deposit | Note |
 |:---|:---|:---|:---|:---|
 | text | n_negative | 18 | 19 | Text: 18 are negative. The deposit has 19 negative, one exactly zero and 47 positive, which sums to 67; the published 47 plus 18 sums to 65 |
-| text | n_pos_and_sig_ci_rule | 23 | 29 | Text: 47 estimates are positive (23 significant). No significance rule the deposit supports gives 23. Both counts rise as a threshold is relaxed, so no threshold gives 23 and 11 at once: the interval rule the archive uses gives 29 and 6, and reaching 11 negative would leave 44 positive |
-| text | n_neg_and_sig_ci_rule | 11 | 6 | Text: 18 are negative (11 significant). The archive’s interval rule gives 6 and no rule reaches 11; see the note on the positive count |
+| text | n_pos_and_sig_ci_rule | 23 | 29 | Text: 47 estimates are positive (23 significant). The deposited script and the rewrite both give 29 under the interval rule the deposit applies, and no rule the deposit supports gives 23. Both counts rise as a threshold is relaxed, so no threshold gives 23 and 11 at once: reaching 11 negative would leave 44 positive. The count is stated without a hedge, so it is compared as printed. |
+| text | n_neg_and_sig_ci_rule | 11 | 6 | Text: 18 are negative (11 significant). The deposited script and the rewrite both give 6 and no rule reaches 11; see the note on the positive count. |
 | text | prop_positive | 0.75 | 0.7014925373134329 | Discussion states more than three-fourths of the studies show a positive effect. value_paper records that lower bound rather than an equality; 47 of 67 is 0.701, so the claim does not hold |
 | figure_3 | n_studies_in_text | 36 | 37 | Text: for the 36 experiments where we were able to identify respondent gender. The deposit and the paper’s own figure both have 37 |
 | table_a1 | n_studies_listed | 43 | 44 | Published Table A.1 lists 43 studies. Simas and Murdoch (2019) has a CATE figure at A.44 but no Table A.1 row |
@@ -609,4 +610,4 @@ in anything the code computes.
 
 Packages loaded when this report was rendered.
 
-Rendered under R version 4.6.0 (2026-04-24) on macOS Tahoe 26.5.2.
+Rendered under R version 4.6.1 (2026-06-24) on macOS Tahoe 26.6.2.

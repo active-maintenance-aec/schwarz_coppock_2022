@@ -92,11 +92,8 @@ spelled <- function(n) {
 # resolves it its own way: bold here, \was{} in an edition. Everything else in a field is
 # literal text.
 #
-# Numbering orders entries by kind and by severity, and MAY be changed. Append-only was the
-# earlier rule, on the theory that a published entry number could already have been cited;
-# reversed 2026-08-10, since these notes are not so widely circulated that a renumber costs
-# anything. Discover first, order last. A renumber may change `entry`; it must never change
-# which claim_ids an entry claims.
+# Numbering is append-only now that the note is public, so entry 11 follows entry 10 whatever
+# its kind. A renumber must never change which claim_ids an entry claims.
 #
 # Entry 1 corrects the same overstatement in two places, so its published and corrected
 # fields each hold two passages joined by a blank line, and its location holds both pages
@@ -337,6 +334,20 @@ entries <- tribble(
     "deposited figures do. Nothing plotted differs: no estimate, standard error, interval or",
     "study is affected, and the letters are the whole of what changes."),
   "",
+  NA_character_,
+
+  11, "typographic", "published_page", "brief",
+  "An appendix figure misspells an attribute in two row labels",
+  "published appendix p. 13",
+  "[[Expereience]]: Three years experience; [[Expereience]]: No Experience",
+  "[[Experience]]: Three years experience; [[Experience]]: No Experience",
+  paste(
+    "Both labels are rows of Figure A.12, Carnes and Lupu (2016), Argentina. The deposited",
+    "estimates file spells the word correctly, while a 2018 presentation figure in the archived",
+    "working folder carries the same misspelling, so regenerating the figure from the deposit",
+    "corrects it. The word is the whole of what changes: no estimate, standard error, or study",
+    "is affected."),
+  "",
   NA_character_
 ) |>
   mutate(across(c(title, published, corrected, note, claim_ids, corrected_values), as.character))
@@ -419,8 +430,10 @@ stopifnot(
 # entries is computed rather than typed, because a hand-typed count of one's own corrections
 # goes stale the moment an entry is added and looks no different when it does.
 run <- function(x) {
-  stopifnot(!anyDuplicated(x), max(x) - min(x) + 1 == length(x))
-  if (length(x) == 1) as.character(x) else paste0(min(x), " to ", max(x))
+  stopifnot(!anyDuplicated(x))
+  spans <- split(sort(x), cumsum(c(1, diff(sort(x)) != 1))) |>
+    map_chr(~ if (length(.x) == 1) as.character(.x) else paste0(min(.x), " to ", max(.x)))
+  str_flatten(spans, collapse = ", ", last = " and ")
 }
 
 # The spine's markup, resolved for this document. Another renderer resolves it differently.
@@ -430,7 +443,7 @@ plain <- function(x) str_remove_all(x, "\\[\\[|\\]\\]")
 
 This note lists `r spelled(nrow(entries))` corrections to "What Have We Learned about Gender from Candidate Choice Experiments? A Meta-Analysis of Sixty-Seven Factorial Survey Experiments," published in *The Journal of Politics* 84(2), doi [10.1086/716290](https://doi.org/10.1086/716290). **None of them changes a conclusion of the paper.** Entries `r run(entries$entry[entries$class != "presentation"])` are errors in the published record, recorded because a reader who quoted it would be misled. Entry `r run(entries$entry[entries$class == "presentation"])` is not an error but a restoration: the journal keyed three figure captions to panel letters its own compositor added, and the authors' figures label those panels by name.
 
-Every corrected value in entries `r run(entries$entry[entries$class %in% c("quantity", "float", "structural")])` is computed from the deposited replication archive ([10.7910/DVN/R27ULT](https://doi.org/10.7910/DVN/R27ULT)) at the time this document is rendered. Entries `r run(entries$entry[entries$class == "bibliographic"])` correct the reference list, which the deposit cannot speak to: entry `r entries$entry[entries$class == "bibliographic"][1]` is verified against the cited manuscript's own title page and the authoritative record at Crossref, and the two URLs against the authors' own bibliography file in the archived working folder, one of them against the article's own reference list as well. Entry `r run(entries$entry[entries$class == "typographic"])` is a single letter and quotes the sentence it stands in. Entry `r run(entries$entry[entries$class == "presentation"])` quotes the published captions themselves, which is the only thing that can settle what a caption says. The maintained code is at [github.com/active-maintenance-aec/schwarz_coppock_2022](https://github.com/active-maintenance-aec/schwarz_coppock_2022).
+Every corrected value in entries `r run(entries$entry[entries$class %in% c("quantity", "float", "structural")])` is computed from the deposited replication archive ([10.7910/DVN/R27ULT](https://doi.org/10.7910/DVN/R27ULT)) at the time this document is rendered. Entries `r run(entries$entry[entries$class == "bibliographic"])` correct the reference list, which the deposit cannot speak to: entry `r entries$entry[entries$class == "bibliographic"][1]` is verified against the cited manuscript's own title page and the authoritative record at Crossref, and the two URLs against the authors' own bibliography file in the archived working folder, one of them against the article's own reference list as well. Entry `r entries$entry[entries$class == "typographic"][1]` is a single letter and quotes the sentence it stands in, and entry `r entries$entry[entries$class == "typographic"][2]` is a misspelled word in an appendix figure. Entry `r run(entries$entry[entries$class == "presentation"])` quotes the published captions themselves, which is the only thing that can settle what a caption says. The maintained code is at [github.com/active-maintenance-aec/schwarz_coppock_2022](https://github.com/active-maintenance-aec/schwarz_coppock_2022).
 
 ```{r entry-1, results="asis"}
 # The one entry that quotes two passages: one row, two pages, two published-corrected pairs.
@@ -515,6 +528,13 @@ walk(seq_along(pages), function(i) {
       "\n\nCorrected:\n\n> ", bold(corrected_passages[i]), "\n\n", sep = "")
 })
 cat(e$note, "\n", sep = "")
+```
+
+```{r entry-11, results="asis"}
+e <- entries |> filter(entry == 11)
+cat("\n\n## ", e$entry, ". ", e$title, "\n\nPublished, ",
+    str_remove(e$location, "^published "), ":\n\n> ", bold(e$published),
+    "\n\nCorrected:\n\n> ", bold(e$corrected), "\n\n", e$note, "\n", sep = "")
 ```
 
 ```{r emit-spine}
