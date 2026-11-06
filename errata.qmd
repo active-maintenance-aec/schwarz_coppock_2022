@@ -113,8 +113,15 @@ spelled <- function(n) {
 # negative estimates and not the two significance counts it leaves unresolved. Every id listed
 # here is checked against the ground truth by ground_truth/build_ground_truth.R, which refuses
 # to finish on a dangling one.
+# corrected_values runs parallel to claim_ids, one value per id in the same order, carrying
+# the corrected quantity as a number rather than as a sentence. The sentence already holds
+# it, but only inside prose a reader has to parse. Each value comes from the same expression
+# that glues the sentence, so the two cannot be written apart, and the gate below re-checks
+# that each one is still inside the span it belongs to. An entry that corrects nothing (a
+# note, or any class other than quantity) carries NA, and so does a quantity entry whose
+# claim is not a number printed in the corrected sentence.
 entries <- tribble(
-  ~entry, ~class, ~source, ~form, ~title, ~location, ~published, ~corrected, ~note, ~claim_ids,
+  ~entry, ~class, ~source, ~form, ~title, ~location, ~published, ~corrected, ~note, ~claim_ids, ~corrected_values,
 
   1, "quantity", "pipeline", "full",
   "The share of studies with a positive effect is overstated, in two places",
@@ -133,7 +140,7 @@ entries <- tribble(
     "{sprintf('%.1f', 100 * share_positive)} per cent, which is below three-fourths rather ",
     "than above it. The claim the two sentences make is unaffected: positive effects are the ",
     "large majority."),
-  "text_prop_positive",
+  "text_prop_positive", NA_character_,
 
   2, "quantity", "pipeline", "full",
   "The counts of negative and of significant estimates",
@@ -172,7 +179,7 @@ entries <- tribble(
     "{verdict_of('horiuchi_1')}. The same paragraph names five further contexts as showing ",
     "negative effects and claims significance for none of them, and the deposit gives a ",
     "negative estimate in every one. No sentence in the article changes."),
-  "text_n_negative;text_n_pos_and_sig_ci_rule;text_n_neg_and_sig_ci_rule",
+  "text_n_negative;text_n_pos_and_sig_ci_rule;text_n_neg_and_sig_ci_rule", str_glue("{counts$n_pos_sig_ci};{n_negative};{counts$n_neg_sig_ci}"),
 
   3, "float", "pipeline", "full",
   "Appendix Figure A.18 prints none of its estimates",
@@ -194,7 +201,7 @@ entries <- tribble(
     "Costa (2020) it shows none of the {n_costa}, which is the one place in the appendix ",
     "where that sentence does not hold. Figure A.1 itself is unaffected, since it is drawn ",
     "from the estimates rather than from these figures."),
-  "",
+  "", NA_character_,
 
   4, "quantity", "pipeline", "full",
   str_glue("Figure 3 covers {n_resp_gender} experiments, not 36"),
@@ -206,7 +213,7 @@ entries <- tribble(
     "figure itself draws {n_resp_gender} rows in each of its two panels. Figure 3 is correct ",
     "as printed and is not reproduced here; only the sentence describing it miscounts. ",
     "Nothing plotted is affected and neither pooled estimate moves."),
-  "figure_3_n_studies_in_text",
+  "figure_3_n_studies_in_text", as.character(n_resp_gender),
 
   5, "structural", "pipeline", "brief",
   "Appendix Table A.1 omits one of the studies it summarizes",
@@ -229,7 +236,7 @@ entries <- tribble(
     "attributes, which is the whole of what Table A.1 exists to give."),
   # The ground truth keys this claim as table_a1_n_studies_listed; published_claims.csv keys
   # the same claim as "table_a1 :: n_studies_listed". claim_ids points at the ground truth.
-  "table_a1_n_studies_listed",
+  "table_a1_n_studies_listed", NA_character_,
 
   6, "bibliographic", "reference_audit", "brief",
   "The Clayton and Nyhan (2020) manuscript has six authors",
@@ -252,7 +259,7 @@ entries <- tribble(
     "appendix's own reference list carries the same two-author entry. Only the labels change:",
     "no estimate, standard error, sample size or study is affected, and neither of the two",
     "experiments the label names is misidentified."),
-  "",
+  "", NA_character_,
 
   7, "bibliographic", "authors_archive", "brief",
   "An appendix reference prints a URL cut off at the edge of the page",
@@ -273,7 +280,7 @@ entries <- tribble(
     "published p. 666, which prints the whole URL because its two-column measure broke the",
     "line somewhere else. Nothing but the URL changes: the entry names the same manuscript,",
     "which is the one entry 6 corrects the authorship of."),
-  "",
+  "", NA_character_,
 
   8, "bibliographic", "authors_archive", "brief",
   "An appendix reference prints a URL with a character missing",
@@ -289,7 +296,7 @@ entries <- tribble(
     "authors' own gender.bib in the archived working folder carries the tilde. The article's",
     "reference list cites a different address for the same manuscript and so cannot settle",
     "this one."),
-  "",
+  "", NA_character_,
 
   9, "typographic", "published_page", "brief",
   "A plural noun where the sentence wants a modifier",
@@ -307,7 +314,7 @@ entries <- tribble(
     "affiliation\" correctly on published p. 657. One letter changes and nothing else does: no",
     "estimate, count, figure or study is affected, and the sentence means what a reader",
     "already takes it to mean."),
-  "",
+  "", NA_character_,
 
   10, "presentation", "published_page", "full",
   "Three figure captions key panel letters the authors' own figures do not print",
@@ -329,11 +336,74 @@ entries <- tribble(
     "correction drops the key and lets the panels name themselves, which is what the",
     "deposited figures do. Nothing plotted differs: no estimate, standard error, interval or",
     "study is affected, and the letters are the whole of what changes."),
-  ""
+  "",
+  NA_character_
 ) |>
-  mutate(across(c(title, published, corrected, note, claim_ids), as.character))
+  mutate(across(c(title, published, corrected, note, claim_ids, corrected_values), as.character))
 
 stopifnot(nrow(entries) == max(entries$entry), !anyDuplicated(entries$entry))
+
+# Gate: corrected_values agrees with the sentence it was glued into ----
+# The column and the sentence are written from one expression, so they begin in agreement
+# and this gate exists for the edit that separates them: a value moved from one marked span
+# to another, a span reworded to carry a second number, a claim id appended without its
+# value. Each value has to be inside the span it belongs to, matched by position where the
+# counts line up, and inside SOME span where they do not. The spelled form counts as the
+# numeral, since a minimal edit sets "six" and not "6".
+marked_spans <- function(x) str_match_all(x, "\\[\\[(.*?)\\]\\]")[[1]][, 2]
+
+spelled_numbers <- c("one", "two", "three", "four", "five", "six", "seven", "eight", "nine",
+                     "ten", "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen",
+                     "seventeen", "eighteen", "nineteen", "twenty")
+
+inside_span <- function(value, span) {
+  numeral <- str_detect(span, fixed(value))
+  spelled <- !is.na(suppressWarnings(as.numeric(value))) &&
+    as.numeric(value) %in% seq_along(spelled_numbers) &&
+    str_detect(span, fixed(spelled_numbers[as.numeric(value)]))
+  numeral || spelled
+}
+
+quantified <- entries |>
+  filter(!is.na(corrected_values)) |>
+  mutate(ids = str_split(claim_ids, ";"), values = str_split(corrected_values, ";"),
+         spans = map(corrected, marked_spans))
+
+stopifnot(all(lengths(quantified$ids) == lengths(quantified$values)))
+
+value_placed <- pmap_lgl(quantified, function(...) {
+  e <- list(...)
+  if (length(e$values) == length(e$spans)) {
+    all(map2_lgl(e$values, e$spans, inside_span)) ||
+      all(map_lgl(e$values, \(v) any(map_lgl(e$spans, \(s) inside_span(v, s)))))
+  } else {
+    all(map_lgl(e$values, \(v) any(map_lgl(e$spans, \(s) inside_span(v, s)))))
+  }
+})
+
+if (!all(value_placed)) {
+  print(quantified |> filter(!value_placed) |> select(entry, title, corrected_values, corrected))
+  stop("An entry's corrected_values are not in the spans of its corrected sentence.")
+}
+
+# An entry that changes a quantity has to say which one, and an entry that changes none may
+# not carry a value. The class is the declaration and this is where it binds. A note
+# corrects nothing, so it carries NA even where its class is quantity, and an entry with no
+# claim id has no claim to carry a value for. `unvalued` lists the quantity entries whose
+# claim is not a number printed in the corrected sentence; they carry NA by decision.
+# Entry 1: the claim is the share of positive studies on the proportion scale (0.7015), and the
+# sentence prints it as a percentage, so no value is both the claim's and the printed span's.
+# Entry 2: the ids run in the ground truth's order, not the order the counts sit in the
+# sentence, so the gate accepts any value that is in some span when position does not match.
+unvalued <- c(1)
+stopifnot(
+  all(!is.na(entries$corrected_values[entries$class == "quantity" & entries$form != "note" &
+                                        !is.na(entries$claim_ids) & entries$claim_ids != "" &
+                                        !entries$entry %in% unvalued])),
+  all(is.na(entries$corrected_values[entries$class != "quantity"])),
+  all(is.na(entries$corrected_values[entries$form == "note"])),
+  all(is.na(entries$corrected_values) | (!is.na(entries$claim_ids) & entries$claim_ids != ""))
+)
 
 # A run of entry numbers, written the way a sentence wants them. Numbered prose about the
 # entries is computed rather than typed, because a hand-typed count of one's own corrections
