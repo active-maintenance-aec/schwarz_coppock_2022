@@ -180,7 +180,7 @@ entries <- tribble(
 
   3, "float", "pipeline", "full",
   "Appendix Figure A.18 prints none of its estimates",
-  "",
+  "published appendix p. 15",
   str_glue(
     "Figure A.18, Costa (2020), USA - Lucid, is the one study in the appendix whose ",
     "randomized attribute levels are whole tweets. At the width the appendix uses, those row ",
