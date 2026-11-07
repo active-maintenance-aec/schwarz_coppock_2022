@@ -141,7 +141,7 @@ entries <- tribble(
 
   2, "quantity", "pipeline", "full",
   "The counts of negative and of significant estimates",
-  "published p. 662",
+  "published p. 661",
   "We see a very consistent pattern in favor of women candidates on average: 47 estimates are positive ([[23]] significant) and [[18]] are negative ([[11]] significant).",
   str_glue(
     "We see a very consistent pattern in favor of women candidates on average: 47 estimates ",
@@ -297,7 +297,7 @@ entries <- tribble(
 
   9, "typographic", "published_page", "brief",
   "A plural noun where the sentence wants a modifier",
-  "published p. 664",
+  "published p. 663",
   paste(
     "Finally, we consider the effects of gender, conditional on respondent characteristics,",
     "in particular by gender and [[partisans]] affiliations."),
