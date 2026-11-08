@@ -28,6 +28,18 @@ counts <- read_csv(here("maintained", "output", "text_in_text_numbers.csv"),
 f3_pooled <- read_csv(here("maintained", "output", "figure_3_meta_summary.csv"),
                       show_col_types = FALSE)
 
+trim <- read_csv(here("maintained", "output", "table_2_trim_sensitivity.csv"),
+                 show_col_types = FALSE)
+trim_archive <- trim |> filter(str_starts(rule, "Archive"))
+trim_text <- trim |> filter(str_starts(rule, "Text"))
+f3_cells <- read_csv(here("maintained", "output", "figure_3_plotted_estimates.csv"),
+                     show_col_types = FALSE)
+sen2_female <- f3_cells |> filter(study_id == "sen_2", panel == "Female respondents")
+sen2_male <- f3_cells |> filter(study_id == "sen_2", panel == "Male respondents")
+n_bib_keys <- n_distinct(studies$bib_entry)
+n_measured <- sum(studies$digitally_measured == 1)
+n_measured_papers <- n_distinct(studies$bib_entry[studies$digitally_measured == 1])
+
 share_positive <- mean(studies$estimate > 0)
 n_positive <- sum(studies$estimate > 0)
 n_negative <- sum(studies$estimate < 0)
@@ -352,6 +364,109 @@ entries <- tribble(
     "authors' own gender.bib in the archived working folder carries the tilde. The article's",
     "reference list cites a different address for the same manuscript and so cannot settle",
     "this one."),
+  "", NA_character_,
+
+  # Entries 12 to 15 are notes, added in the sweep of 2026-11-08. Each quotes a passage this
+  # edition reprints as published and proposes no change to it, because no corrected token
+  # can be set without deciding something the deposit cannot decide.
+  # Entry 12 is a note and not a correction: moving "5%" to the code's 2nd and 95th
+  # percentiles, or moving the code to the text's rule, is a statement of which sample the
+  # authors meant, and that is a change to a sample definition rather than a mechanical fix.
+  # README.qmd 235 and 313; notes.md 466 and 536 to 538. Table 2's row and the text agree
+  # with each other and disagree with the code.
+  12, "description", "pipeline", "note",
+  "The trimmed estimate is described as dropping five per cent from each tail, and the code does not",
+  "p. 662",
+  "Importantly, even when we trim [[the bottom and top 5%]] of point estimates from our analysis, our meta-analytic estimate remains robust, suggesting that our findings are not merely attributable to a handful of outlying studies.",
+  NA_character_,
+  str_glue(
+    "Table 2 (published p. 663) labels the row this sentence describes \"Trimmed (middle 90% of ",
+    "estimates)\", so the label and the sentence agree that five per cent is cut from each tail. ",
+    "The deposited code keeps the estimates above the 2nd percentile and below the 95th. That ",
+    "drops {trim_archive$n_dropped_low} of the {trim_archive$n_all} studies at the bottom ",
+    "({sprintf('%.1f', 100 * trim_archive$n_dropped_low / trim_archive$n_all)} per cent) and ",
+    "{trim_archive$n_dropped_high} at the top ",
+    "({sprintf('%.1f', 100 * trim_archive$n_dropped_high / trim_archive$n_all)} per cent), ",
+    "retaining {trim_archive$n_studies}, or ",
+    "{sprintf('%.0f', 100 * trim_archive$n_studies / trim_archive$n_all)} per cent rather than ",
+    "90. The published row is the result of that rule: ",
+    "{sprintf('%.4f', trim_archive$estimate)} (SE {sprintf('%.4f', trim_archive$std.error)}, ",
+    "interval {sprintf('%.4f', trim_archive$conf.low)} to {sprintf('%.4f', trim_archive$conf.high)}) ",
+    "over {trim_archive$n_studies} studies. The symmetric rule the sentence describes retains ",
+    "{trim_text$n_studies} and gives {sprintf('%.4f', trim_text$estimate)} ",
+    "(SE {sprintf('%.4f', trim_text$std.error)}, interval {sprintf('%.4f', trim_text$conf.low)} to ",
+    "{sprintf('%.4f', trim_text$conf.high)}); both are in ",
+    "`maintained/output/table_2_trim_sensitivity.csv`.",
+    "\n\n",
+    "Neither the sentence nor the row label is corrected. Rewriting them to match the code, or ",
+    "rerunning the code to match them, would each fix a sample definition, and the deposit cannot ",
+    "say which sample the authors meant. ",
+    "No conclusion changes: the trimmed estimate is positive with an interval that excludes zero ",
+    "under either rule, and moves by {sprintf('%.4f', trim_text$estimate - trim_archive$estimate)}, ",
+    "so the sentence's claim that a handful of outlying studies does not drive the result holds ",
+    "under both."),
+  "", NA_character_,
+
+  # Entry 13 is a note and not a correction: the deposit assigns {n_bib_keys} bibliography keys
+  # to the 67 studies, but whether two keys are one paper (a preprint and its published
+  # version, say) cannot be settled from the deposit. README.qmd 313.
+  13, "quantity", "pipeline", "note",
+  str_glue("The design section counts 49 papers and the deposit assigns {n_bib_keys} bibliography keys"),
+  "p. 659",
+  "In total, we located 67 experiments from [[49 papers]].",
+  NA_character_,
+  str_glue(
+    "The deposited study-level file assigns {n_bib_keys} distinct bibliography keys to the 67 ",
+    "studies. The two counts differ by {n_bib_keys - 49}, and the deposit is self-consistent in ",
+    "showing {n_bib_keys}, so it cannot say whether the article treats two keys as one source or ",
+    "miscounts. No corrected count is set, because setting {n_bib_keys} would assert that every ",
+    "key is a distinct paper, which is what the deposit cannot show. The count describes the ",
+    "literature search and enters no estimate: no conclusion of the paper changes, and no study ",
+    "or effect depends on how many papers the 67 experiments came from."),
+  "", NA_character_,
+
+  # Entry 14 is a note and not a correction: the deposit marks digital measurement in a
+  # free-text note field, so whether the article's nine experiments excludes one of the
+  # marked ten cannot be settled. README.qmd 311; notes.md 464 to 466.
+  14, "quantity", "pipeline", "note",
+  str_glue("Appendix B counts nine digitally measured experiments in seven papers and the deposit marks {n_measured} in {n_measured_papers}"),
+  "app. p. 34",
+  "Figure 1 in the main text includes estimates from [[nine experiments in seven papers]] that we were only able to obtain by digitally measuring the coefficient plots included in the published papers.",
+  NA_character_,
+  str_glue(
+    "The deposited study-level file marks {n_measured} experiments from {n_measured_papers} papers ",
+    "as having had their estimates measured from a picture, in a free-text note field. The ",
+    "appendix says nine experiments in seven papers. Whether the appendix's nine leaves out one ",
+    "of the marked {n_measured}, or the note field marks one the authors did not count, cannot be ",
+    "settled from free text, so no corrected pair is set. The validation exercise that follows ",
+    "the sentence is a test of the measurement method on one study and does not depend on the ",
+    "count: no conclusion of the paper changes, and the {n_measured} marked estimates are in the ",
+    "pooled results either way."),
+  "", NA_character_,
+
+  # Entry 15 is a note and not a correction: the page prints the earlier revision of one
+  # study's estimates and the deposited conditional-effects file holds a later one, so which
+  # value is the published figure's to carry is not a matter of replacing a token.
+  # README.qmd 309.
+  15, "float", "pipeline", "note",
+  "Two cells of Figure 3 print an earlier revision of one study's estimates",
+  "p. 663, Figure 3",
+  paste(
+    "Female respondents: Sen (2017), USA, SSI 2: [[6.0]] (2.2)",
+    "Male respondents: Sen (2017), USA, SSI 2: [[0.5]] (2.0)",
+    sep = "\n\n"),
+  NA_character_,
+  str_glue(
+    "The figure prints 6.0 and 0.5 for Sen (2017), USA, ",
+    "SSI 2, in the female and male respondent panels. The deposited respondent-gender file gives ",
+    "{sen2_female$se_entry} and {sen2_male$se_entry}; the standard errors agree with the page. ",
+    "The deposited study-level file carries the revised Sen SSI 2 estimate that Figure 1 ",
+    "reproduces exactly, so the conditional-effects file is one revision behind the figure the ",
+    "article printed. No value is set here, because replacing the two cells would present the ",
+    "deposit's earlier file as the figure's intended source, which the deposit cannot show. Every ",
+    "other estimate and standard error in the figure reproduces, as do both pooled estimates and ",
+    "the difference between them, so no conclusion of the paper changes: two study-level points ",
+    "of 74 differ by a tenth of a percentage point."),
   "", NA_character_
 ) |>
   mutate(across(c(title, published, corrected, note, claim_ids, corrected_values), as.character))
@@ -430,6 +545,12 @@ stopifnot(
   all(is.na(entries$corrected_values) | (!is.na(entries$claim_ids) & entries$claim_ids != ""))
 )
 
+# form == "note" declares that the entry quotes a passage and proposes no change to it, so it
+# has no corrected side. The two have to agree: a note carrying corrected text would print a
+# correction this edition does not make, and a correction carrying NA would print "NA" where
+# its corrected sentence belongs.
+stopifnot(is.na(entries$corrected) == (entries$form == "note"))
+
 # A run of entry numbers, written the way a sentence wants them. Numbered prose about the
 # entries is computed rather than typed, because a hand-typed count of one's own corrections
 # goes stale the moment an entry is added and looks no different when it does.
@@ -445,9 +566,9 @@ bold <- function(x) str_replace_all(x, "\\[\\[(.*?)\\]\\]", "**\\1**")
 plain <- function(x) str_remove_all(x, "\\[\\[|\\]\\]")
 ```
 
-This note lists `r spelled(nrow(entries))` corrections to "What Have We Learned about Gender from Candidate Choice Experiments? A Meta-Analysis of Sixty-Seven Factorial Survey Experiments," published in *The Journal of Politics* 84(2), doi [10.1086/716290](https://doi.org/10.1086/716290). **None of them changes a conclusion of the paper.** Entries `r run(entries$entry[entries$entry != 6])` are errors in the published record, recorded because a reader who quoted it would be misled. Entry `r run(entries$entry[entries$entry == 6])` is not an error but a restoration: the journal keyed three figure captions to panel letters its own compositor added, and the authors' figures label those panels by name.
+This note lists `r spelled(sum(entries$form != "note"))` corrections to "What Have We Learned about Gender from Candidate Choice Experiments? A Meta-Analysis of Sixty-Seven Factorial Survey Experiments," published in *The Journal of Politics* 84(2), doi [10.1086/716290](https://doi.org/10.1086/716290). It also carries `r spelled(sum(entries$form == "note"))` entries of a second kind, which quote a passage and propose no change to it: the Results sentence that says the trimmed estimate drops the bottom and top 5% where the code drops 3.0 and 6.0 per cent, the design sentence that counts 49 papers where the deposit has 50 bibliography keys, the appendix sentence that counts nine digitally measured experiments in seven papers where the deposit marks ten in eight, and two cells of Figure 3 that print an earlier revision of one study's estimates. **No correction and no note here changes a conclusion of the paper.** Entries `r run(entries$entry[entries$form != "note" & entries$entry != 6])` are errors in the published record, recorded because a reader who quoted it would be misled. Entry `r run(entries$entry[entries$entry == 6])` is not an error but a restoration: the journal keyed three figure captions to panel letters its own compositor added, and the authors' figures label those panels by name. Entries `r run(entries$entry[entries$form == "note"])` are neither: they are carried as the paper published them, and are described under their own heading below.
 
-Every corrected value in entries `r run(entries$entry[entries$class %in% c("quantity", "float", "label")])` is computed from the deposited replication archive ([10.7910/DVN/R27ULT](https://doi.org/10.7910/DVN/R27ULT)) at the time this document is rendered. Entries `r run(entries$entry[entries$class == "bibliographic"])` correct the reference list, which the deposit cannot speak to: entry `r entries$entry[entries$class == "bibliographic"][1]` is verified against the cited manuscript's own title page and the authoritative record at Crossref, and the two URLs against the authors' own bibliography file in the archived working folder, one of them against the article's own reference list as well. Entry `r entries$entry[entries$class == "typography"][1]` is a single letter and quotes the sentence it stands in, and entry `r entries$entry[entries$class == "typography"][2]` is a misspelled word in an appendix figure. Entry `r run(entries$entry[entries$entry == 6])` quotes the published captions themselves, which is the only thing that can settle what a caption says. The maintained code is at [github.com/active-maintenance-aec/schwarz_coppock_2022](https://github.com/active-maintenance-aec/schwarz_coppock_2022).
+Every corrected value in entries `r run(entries$entry[entries$class %in% c("quantity", "float", "label") & entries$form != "note"])` is computed from the deposited replication archive ([10.7910/DVN/R27ULT](https://doi.org/10.7910/DVN/R27ULT)) at the time this document is rendered. Entries `r run(entries$entry[entries$class == "bibliographic"])` correct the reference list, which the deposit cannot speak to: entry `r entries$entry[entries$class == "bibliographic"][1]` is verified against the cited manuscript's own title page and the authoritative record at Crossref, and the two URLs against the authors' own bibliography file in the archived working folder, one of them against the article's own reference list as well. Entry `r entries$entry[entries$class == "typography"][1]` is a single letter and quotes the sentence it stands in, and entry `r entries$entry[entries$class == "typography"][2]` is a misspelled word in an appendix figure. Entry `r run(entries$entry[entries$entry == 6])` quotes the published captions themselves, which is the only thing that can settle what a caption says. The maintained code is at [github.com/active-maintenance-aec/schwarz_coppock_2022](https://github.com/active-maintenance-aec/schwarz_coppock_2022).
 
 ```{r entry-1, results="asis"}
 # The one entry that quotes two passages: one row, two pages, two published-corrected pairs.
@@ -543,6 +664,23 @@ cat("\n\n## ", e$entry, ". ", e$title, "\n\nPublished, ", str_remove(e$location,
 
 ```{r entries-10-11, results="asis"}
 walk(10:11, emit_single)
+```
+
+# Carried, and not corrected
+
+The `r spelled(sum(entries$form == "note"))` entries below are different in kind from the `r spelled(sum(entries$form != "note"))` corrections in this note. Each quotes a passage this edition reprints exactly as the paper published it, and proposes no change to it.
+
+Three of them are places where the page and the deposited archive disagree and the deposit cannot say which is right: a trimming rule that the code applies differently from the text and the table label, a count of papers, and a count of digitally measured experiments. The fourth is two cells of a figure drawn from an earlier revision of one study's estimates than the deposit holds. In each case a corrected token could only be set by deciding what the authors meant, which is theirs to say, and none of the four reaches an estimate the paper rests a conclusion on. Each is recorded here because an edition that silently reproduced them would leave a reader unable to tell a faithful reprint from an uncorrected error.
+
+```{r entries-carried, results="asis"}
+# A note has no corrected side, and that absence is the whole of the form: an empty
+# "Corrected:" block would read as a correction to nothing.
+emit_note <- function(n) {
+  e <- entries |> filter(entry == n)
+  cat("\n\n## ", e$entry, ". ", e$title, "\n\nPublished, ", e$location, ":\n\n",
+      str_c("> ", str_replace_all(bold(e$published), "\n\n", "\n>\n> ")), "\n\n", e$note, "\n", sep = "")
+}
+walk(entries$entry[entries$form == "note"], emit_note)
 ```
 
 ```{r emit-spine}

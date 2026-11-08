@@ -120,15 +120,20 @@ The disagreements, none of which changes a substantive conclusion:
 
 Published numbers the deposit does not reproduce.
 
-6 are the article contradicting its own data. Five of those are in
+6 are the article contradicting its own data. All of those are in
 `errata.qmd`, which renders to `schwarz_coppock_2022_errata.pdf` and
-sets out 11 numbered items, five of them computed from the deposit at
-render time and the rest corrections of references, wording, and
-captions; the sixth is the row count of appendix Table A.1, which is a
-defect in a table rather than in a sentence and is described below. 2
-are the deposit disagreeing with the page. The remaining 7 are
-unresolved, in the strict sense that the cause cannot be established
-from the deposit and guessing at one would be worse than saying so.
+sets out 11 numbered corrections, five of them computed from the deposit
+at render time and the rest corrections of references, wording, and
+captions; one of them, entry 5, is the row count of appendix Table A.1,
+which is a defect in a table rather than in a sentence and is described
+below. 2 are the deposit disagreeing with the page, which the errata
+carries as the note at entry 15. The remaining 7 are unresolved, in the
+strict sense that the cause cannot be established from the deposit and
+guessing at one would be worse than saying so. Two of them are the
+significance counts, which entry 2 corrects to the rule the deposited
+script applies; the other five are carried without correction as the
+notes at entries 12 to 14 of the errata, which quote the passage as
+published and set no corrected side.
 
 **One published figure prints no data at all.** Appendix Figure A.18 is
 Costa (2020), whose randomized attribute levels are whole tweets. At the
@@ -151,8 +156,9 @@ of finding the right threshold: both counts rise as a threshold is
 relaxed, so no threshold produces 23 and 11 together. The threshold that
 puts 23 estimates in the positive column leaves 5 in the negative one,
 and the threshold that reaches 11 in the negative column leaves 43 in
-the positive one. No corrected value can be stated, so none is; this is
-recorded as unresolved rather than as an erratum.
+the positive one. Entry 2 of the errata therefore corrects the counts to
+the rule the deposited script applies, and says that the procedure
+behind the published pair is unknown.
 
 Every estimate, standard error, interval and p-value the article reports
 in prose reproduces exactly. What fails is a set of hand-counted
@@ -273,18 +279,20 @@ significantly different from the Democratic and Independent estimates,”
 which is true of both the wrong value and the right one. No published
 number changes.
 
-**Not corrected: the trimming rule.** Table 2’s last-but-one row is
-labelled “Trimmed (middle 90% of estimates)” and the text says the row
-drops “the bottom and top 5% of point estimates.” The code keeps
-estimates above the 2nd percentile and below the 95th, which drops the
-bottom 3.0 per cent and the top 6.0 per cent and retains 61 of 67
-studies, or 91 per cent rather than 90. Correcting 0.02 to 0.05 would be
-a plausible reading of a typo, but it is a change to a sample definition
-rather than to a mechanical error, so the rewrite reproduces the
-published row as computed and reports the alternative separately in
-`output/table_2_trim_sensitivity.csv`. The symmetric rule the text
-describes gives 0.020 over 59 studies against the published 0.018 over
-61, so the robustness claim the row is making survives either reading.
+**Carried as a note, not corrected: the trimming rule.** Table 2’s
+last-but-one row is labelled “Trimmed (middle 90% of estimates)” and the
+text says the row drops “the bottom and top 5% of point estimates.” The
+code keeps estimates above the 2nd percentile and below the 95th, which
+drops the bottom 3.0 per cent and the top 6.0 per cent and retains 61 of
+67 studies, or 91 per cent rather than 90. Correcting 0.02 to 0.05 would
+be a plausible reading of a typo, but it is a change to a sample
+definition rather than to a mechanical error, so the rewrite reproduces
+the published row as computed and reports the alternative separately in
+`output/table_2_trim_sensitivity.csv`. The errata carries this as entry
+12, a note that quotes the sentence as published and corrects nothing,
+for the reason given here. The symmetric rule the text describes gives
+0.020 over 59 studies against the published 0.018 over 61, so the
+robustness claim the row is making survives either reading.
 
 **Not corrected: the year threshold.** The subset labelled “Post-2014
 studies” is selected by `year > 2010`. The labels are nonetheless
@@ -396,8 +404,9 @@ both Sen (2017), USA, SSI 2 in Figure 3, where the page prints 6.0 and
 0.5 and the deposited respondent-gender file gives 5.9 and 0.4. The
 deposited study-level file does carry a revised Sen SSI 2 estimate,
 which Figure 1 reproduces exactly, so the conditional-effects file is
-one revision behind the figure the article printed. Every one of the
-1,888 appendix labels reproduces exactly.
+one revision behind the figure the article printed. The errata carries
+these two cells as entry 15, a note that corrects nothing. Every one of
+the 1,888 appendix labels reproduces exactly.
 
 **The deposit has no counterpart for 22 published numbers**, each named
 with its reason in `build_ground_truth.R`. Twelve are quoted from other
@@ -410,7 +419,9 @@ and Coppock’s raw data; the deposit carries neither, so those numbers
 are not reconstructible from it. What the deposit does record is which
 studies were measured that way, in a free-text note field: the note
 marks ten experiments in eight papers where the appendix says nine in
-seven.
+seven. The errata carries this as entry 14, a note that corrects
+nothing, because the free-text field cannot say which count the authors
+meant.
 
 **Two further disagreements the float-shaped ground truth could not
 see.** The design section says the 67 experiments come from 49 papers,
@@ -418,9 +429,10 @@ where the deposit assigns 50 distinct bibliography keys to them. And
 Table 2’s trimmed row, labelled “middle 90% of estimates” and described
 in the text as dropping “the bottom and top 5% of point estimates,” in
 fact drops the bottom 3.0 per cent and the top 6.0 per cent, retaining
-61 of 67. Both are recorded as unresolved: the deposit is
-self-consistent in each case and cannot say which of the two readings
-was intended.
+61 of 67. Both are unresolved, and both are carried in the errata as
+notes that correct nothing, the paper count as entry 13 and the trimmed
+row as entry 12: the deposit is self-consistent in each case and cannot
+say which of the two readings was intended.
 
 # Maintained rewrite
 
