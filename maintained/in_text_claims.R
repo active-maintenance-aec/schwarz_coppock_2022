@@ -1,6 +1,7 @@
 # schwarz_coppock_2022/maintained/in_text_claims.R
-# Output: none (prints an audit trail to stdout)
-# Depends on: maintained/output/, ground_truth/published_claims.csv, helpers.R
+# Output: printed CLAIM lines and a CLAIM SUMMARY line; no files
+# Depends on: maintained/output/, ground_truth/published_claims.csv, errata_entries.csv,
+#   helpers.R, excheckr
 # Description: Every number the article and its appendix print, paired with the sentence
 #   that prints it and with the value this pipeline produces, in the article's own units
 #   and rounding, in the order a reader meets them.
@@ -14,17 +15,29 @@
 #   produced every estimate.
 #
 #   It may read ground_truth/published_claims.csv, which is the extraction rather than the
-#   comparison. That file supplies the claim ids and the article's own transcribed strings;
-#   no value printed below is taken from it.
+#   comparison, and errata_entries.csv, the errata spine. The first supplies the claim ids
+#   and the article's own transcribed strings; the second says which of them a published
+#   erratum corrects and to what. No value printed below is taken from either.
 #
 #   Each prose claim carries the article's sentence verbatim in a block comment, then a
 #   "# covers:" tag naming the claim id in published_claims.csv it accounts for. Float
 #   cells carry no sentence, because a table cell and a label on a forest plot are read off
 #   a page rather than out of a sentence; they are printed in bulk, one line each.
 #
-#   Every claim prints one line reading "CLAIM <claim_id> = <value>". build_ground_truth.R
-#   runs this file non-interactively, counts those lines and compares them claim by claim,
-#   so a block that stops printing is a failure rather than silent coverage.
+#   Every claim prints one line reading
+#
+#       CLAIM <claim_id> = <value> || [verdict] <label>
+#
+#   through excheckr, at the precision the article prints. build_ground_truth.R runs this
+#   file non-interactively, counts those lines and compares them claim by claim, so a block
+#   that stops printing is a failure rather than silent coverage. The verdict is derived
+#   from the extraction and the errata spine, never typed: [match] where the article and
+#   this file agree, [corrected] where a quantity erratum names the claim and this value is
+#   the correction it prints, [hedged] for a descriptive claim stated as a bound, and
+#   [absent] where the deposit has no counterpart. [derived] is declared at the call site
+#   for a claim the pipeline is known to contradict and no erratum corrects to a value:
+#   each says why in its label, and build_ground_truth.R records where the fault lies. A
+#   MISMATCH, STALE, DRIFT, or MISSING stops the run.
 #
 #   cat() is used here and nowhere else in this repository, per the in-text claims spec.
 #
@@ -33,6 +46,7 @@
 # Experiments." The Journal of Politics 84(2): 655-668.
 
 source(here::here("maintained", "helpers.R"))
+library(excheckr)
 
 options(width = 200)
 
@@ -62,20 +76,46 @@ fa2_cells <- out("figure_a2_a45_plotted_estimates.csv")
 counts <- out("text_in_text_numbers.csv")
 studies <- out("text_study_level.csv")
 
-# Printing ----
-# One line per claim, carrying the claim id as its label, so the output is scannable
-# beside the sentences and machine-readable by the coverage gate.
-printed <- character(0)
+# The errata spine ----
+# Every column is read as character, so a corrected 0.7015 keeps its precision. The spine
+# addresses the hand-kept ground truth, whose ids are not the extraction's, so each id a
+# quantity erratum corrects is carried across to the extraction claim it is printed as.
+# Entry 1 corrects one overstatement printed in two sentences, so its one ground truth row
+# stands for two claims here. Note-form entries set no corrected value and are left out,
+# as are the other classes, which correct a word or a label and leave every number where
+# the article put it.
+errata <- read_csv(here::here("errata_entries.csv"), col_types = cols(.default = col_character()))
 
-# The printed line carries the claim id, the value and a readable label. The id is what
-# the coverage gate reads, which is why it is on the line rather than only in a comment
-# beside it: a comment can go stale independently of the code it sits next to.
-claim <- function(id, value, label = str_replace_all(str_replace_all(id, fixed(" :: "), ", "),
-                                                     "_", " ")) {
-  stopifnot(length(id) == 1, length(value) == 1)
-  printed <<- c(printed, id)
-  cat("CLAIM ", id, " = ", format(value), " || ", label, "\n", sep = "")
-}
+ground_truth_to_extraction <- tribble(
+  ~ground_truth_id, ~claim_id,
+  "text_prop_positive", "theory :: share_positive_fraction",
+  "text_prop_positive", "discussion :: share_positive_fraction",
+  "text_n_pos_and_sig_ci_rule", "results :: n_positive_significant",
+  "text_n_negative", "results :: n_negative",
+  "text_n_neg_and_sig_ci_rule", "results :: n_negative_significant",
+  "figure_3_n_studies_in_text", "results :: n_resp_gender_studies"
+)
+
+corrections <- errata |>
+  filter(class == "quantity", !is.na(corrected_values)) |>
+  mutate(ground_truth_id = str_split(claim_ids, ";"),
+         corrected = str_split(corrected_values, ";")) |>
+  unnest(c(ground_truth_id, corrected))
+
+stopifnot(all(corrections$ground_truth_id %in% ground_truth_to_extraction$ground_truth_id))
+
+errata_by_claim <- corrections |>
+  inner_join(ground_truth_to_extraction, by = "ground_truth_id",
+             relationship = "one-to-many") |>
+  summarize(claim_ids = str_flatten(claim_id, ";"),
+            corrected_values = str_flatten(corrected, ";"),
+            .by = c(entry, class))
+
+# label_column = "claim" prints the extraction's description beside each value. The
+# extraction's expect column records the declarations made at the call sites below and is
+# not passed here.
+claim_start(published = published, errata = errata_by_claim, format = "id",
+            label_column = "claim")
 
 heading <- function(text) cat("\n", text, "\n", strrep("-", nchar(text)), "\n", sep = "")
 
@@ -88,12 +128,6 @@ one <- function(data, column, ...) {
   stopifnot(!is.na(value))
   value
 }
-
-pp1 <- function(x) sprintf("%.1f", x)
-
-# A published quantity the deposit cannot supply prints this rather than a number. The
-# ids it applies to are listed in build_ground_truth.R with the reason.
-absent <- "not in deposit"
 
 # ============================================================================
 # Abstract
@@ -115,7 +149,7 @@ claim("abstract :: n_studies", nrow(studies))
 # "We find that the average effect of being a woman (relative to a man) is a gain of
 # approximately 2 percentage points."
 # covers: abstract :: pooled_ate_pp
-claim("abstract :: pooled_ate_pp", sprintf("%.0f", 100 * f1_pooled$estimate))
+claim("abstract :: pooled_ate_pp", 100 * f1_pooled$estimate, digits = 0)
 
 # ============================================================================
 # Introduction (pp. 655-657)
@@ -167,7 +201,7 @@ cat("  evidence: ",
 # "Our meta-analytic estimate of the average effect of being a woman (vs. a man) is an
 # approximately 2 percentage point increase in support."
 # covers: intro :: pooled_ate_pp
-claim("intro :: pooled_ate_pp", sprintf("%.0f", 100 * f1_pooled$estimate))
+claim("intro :: pooled_ate_pp", 100 * f1_pooled$estimate, digits = 0)
 
 # ============================================================================
 # Supply and demand explanations for candidate selection (pp. 657-659)
@@ -181,7 +215,7 @@ heading("Supply and demand explanations (pp. 657-659)")
 claim("theory :: n_studies", nrow(studies))
 
 # covers: theory :: share_positive_fraction
-claim("theory :: share_positive_fraction", sprintf("%.3f", mean(studies$estimate > 0)))
+claim("theory :: share_positive_fraction", mean(studies$estimate > 0), digits = 3)
 cat("  evidence: ", sum(studies$estimate > 0), " of ", nrow(studies),
     " estimates are positive; ", sum(studies$estimate < 0), " are negative and ",
     sum(studies$estimate == 0), " is exactly zero\n", sep = "")
@@ -197,7 +231,7 @@ industrialized_democracies <- c("USA", "UK", "Japan", "Norway", "Australia", "Ch
 
 # covers: theory :: majority_industrialized_democracies
 claim("theory :: majority_industrialized_democracies",
-      sprintf("%.3f", mean(studies$country %in% industrialized_democracies)))
+      mean(studies$country %in% industrialized_democracies), digits = 3)
 cat("  evidence: ", sum(studies$country %in% industrialized_democracies), " of ",
     nrow(studies), " studies were fielded in ",
     str_flatten_comma(sort(industrialized_democracies)),
@@ -215,7 +249,11 @@ heading("Design (pp. 659-661)")
 claim("design :: n_studies_located", nrow(studies))
 
 # covers: design :: n_papers
-claim("design :: n_papers", n_distinct(studies$bib_entry))
+# The deposit assigns 50 bibliography keys where the sentence says 49 papers, and it cannot
+# say whether two of them are one source. Errata entry 13 carries the sentence as a note.
+claim("design :: n_papers", n_distinct(studies$bib_entry),
+      "distinct bibliography keys the deposit assigns, against the papers the sentence names",
+      expect = "derived")
 
 # "In 48 of the 67 cases, we were able to obtain replication data through either private
 # communication or publicly available repositories."
@@ -234,7 +272,7 @@ claim("design :: n_without_raw_data", sum(studies$have_data == "No"))
 # from Afghanistan, Argentina, Australia, Brazil, Chile, Denmark, Germany, India, Japan,
 # Jordan, Malawi, Norway, Switzerland, Tunisia, the United Kingdom, Vietnam, and Zambia."
 # covers: design :: share_us_studies
-claim("design :: share_us_studies", sprintf("%.3f", mean(studies$country == "USA")))
+claim("design :: share_us_studies", mean(studies$country == "USA"), digits = 3)
 cat("  evidence: ", sum(studies$country == "USA"), " of ", nrow(studies),
     " studies are American, drawn from ", n_distinct(studies$country), " countries\n", sep = "")
 
@@ -247,7 +285,7 @@ claim("design :: n_studies_database", nrow(studies))
 claim("design :: n_continents", nrow(continents))
 
 # covers: design :: span_decades
-claim("design :: span_decades", sprintf("%.1f", (max(studies$year) - min(studies$year)) / 10))
+claim("design :: span_decades", (max(studies$year) - min(studies$year)) / 10, digits = 1)
 cat("  evidence: the earliest study was fielded in ", min(studies$year),
     " and the latest in ", max(studies$year), "\n", sep = "")
 
@@ -257,8 +295,8 @@ cat("  evidence: the earliest study was fielded in ", min(studies$year),
 # width divided by its standard error is the critical value the level implies.
 # covers: design :: confidence_level
 claim("design :: confidence_level",
-      sprintf("%.0f",
-              100 * (1 - 2 * pnorm(-(f1_pooled$conf.high - f1_pooled$estimate) / f1_pooled$std.error))))
+      100 * (1 - 2 * pnorm(-(f1_pooled$conf.high - f1_pooled$estimate) / f1_pooled$std.error)),
+      digits = 0)
 
 # ============================================================================
 # Table 1: study manifest (pp. 660-661)
@@ -271,7 +309,7 @@ heading("Table 1, the 67-study manifest (pp. 660-661)")
 # read back from the formatted table the pipeline writes, with the thousands separators
 # the page prints removed.
 table_1_cells <- published |>
-  filter(location == "table_1") |>
+  filter(str_starts(claim_id, "table_1 :: ")) |>
   mutate(
     study_id = str_split_i(claim_id, fixed(" :: "), 2),
     statistic = str_split_i(claim_id, fixed(" :: "), 3)
@@ -281,7 +319,7 @@ for (i in seq_len(nrow(table_1_cells))) {
   cell <- table_1_cells[i, ]
   column <- if (cell$statistic == "n_subjects") "n_subjects" else "n_ratings"
   value <- one(t1, column, study_id == cell$study_id)
-  claim(cell$claim_id, str_remove_all(value, ","))
+  claim(cell$claim_id, as.numeric(str_remove_all(value, ",")), digits = 0)
 }
 
 # ============================================================================
@@ -293,13 +331,13 @@ heading("Results, main finding (pp. 661-663)")
 # "Using random effects meta-analysis, we estimate the average ATE to be 1.8 percentage
 # points, with a confidence interval stretching from 1.1 to 2.5 points."
 # covers: results :: pooled_ate_pp
-claim("results :: pooled_ate_pp", pp1(100 * f1_pooled$estimate))
+claim("results :: pooled_ate_pp", 100 * f1_pooled$estimate, digits = 1)
 
 # covers: results :: pooled_ci_low_pp
-claim("results :: pooled_ci_low_pp", pp1(100 * f1_pooled$conf.low))
+claim("results :: pooled_ci_low_pp", 100 * f1_pooled$conf.low, digits = 1)
 
 # covers: results :: pooled_ci_high_pp
-claim("results :: pooled_ci_high_pp", pp1(100 * f1_pooled$conf.high))
+claim("results :: pooled_ci_high_pp", 100 * f1_pooled$conf.high, digits = 1)
 
 # "We see a very consistent pattern in favor of women candidates on average: 47 estimates
 # are positive (23 significant) and 18 are negative (11 significant)."
@@ -329,14 +367,14 @@ claim("results :: n_negative_significant", counts$n_neg_sig_ci)
 # et al. 2019), another is negative and significant (Ono and Yamada 2020), and a third
 # comes in precisely at 0.0 (Horiuchi, Smith, and Yamamoto 2020)."
 # covers: results :: horiuchi_estimate_pp
-claim("results :: horiuchi_estimate_pp", pp1(100 * one(studies, "estimate", study_id == "horiuchi_1")))
+claim("results :: horiuchi_estimate_pp", 100 * one(studies, "estimate", study_id == "horiuchi_1"), digits = 1)
 
 # "Our summary read of this collection of studies is that the average effect of being
 # described as a woman candidate is an approximately 2 percentage point gain in vote
 # margin and that this positive effect applies in most, but emphatically not all,
 # contexts."
 # covers: results :: pooled_ate_pp_restated
-claim("results :: pooled_ate_pp_restated", sprintf("%.0f", 100 * f1_pooled$estimate))
+claim("results :: pooled_ate_pp_restated", 100 * f1_pooled$estimate, digits = 0)
 
 # "Figure 1. Results of 67 candidate choice experiments on the effect of candidate gender"
 # covers: figure_1 :: caption_n_studies
@@ -352,9 +390,10 @@ heading("Figure 1, estimates and standard errors printed beside every row (p. 66
 # decimal, beside each of its 68 rows. Those are published numbers and are compared here
 # one by one.
 figure_cells <- published |>
-  filter(location %in% c("figure_1", "figure_2", "figure_3", "figure_4"),
+  filter(str_detect(claim_id, "^figure_[1-4] :: "),
          str_detect(claim_id, " :: (estimate|std_error)$")) |>
   mutate(
+    figure = str_split_i(claim_id, fixed(" :: "), 1),
     statistic = str_split_i(claim_id, fixed(" :: "), -1),
     study_id = str_split_i(claim_id, fixed(" :: "), -2),
     panel_slug = if_else(str_count(claim_id, fixed(" :: ")) == 3,
@@ -368,8 +407,19 @@ panel_name <- c(black = "Black candidate", white = "White candidate",
 
 plotted <- list(figure_1 = f1, figure_2 = f2, figure_3 = f3, figure_4 = f4)
 
+# Two Figure 3 cells are the one place the deposit disagrees with a figure the article
+# printed: the deposited respondent-gender file is a revision behind the Sen (2017) SSI 2
+# estimate Figure 1 reproduces. Errata entry 15 carries them as a note, so each is declared
+# rather than asserted, with the article's value in its label.
+revised_since_deposit <- c(
+  "figure_3 :: female :: sen_2 :: estimate" =
+    "Sen SSI 2, female respondents, from a deposited file one revision behind the figure, which prints 6.0",
+  "figure_3 :: male :: sen_2 :: estimate" =
+    "Sen SSI 2, male respondents, from a deposited file one revision behind the figure, which prints 0.5"
+)
+
 print_figure_cells <- function(figure) {
-  cells <- figure_cells |> filter(location == figure)
+  cells <- figure_cells |> filter(.data$figure == .env$figure)
   data <- plotted[[figure]]
   for (i in seq_len(nrow(cells))) {
     cell <- cells[i, ]
@@ -380,7 +430,17 @@ print_figure_cells <- function(figure) {
     }
     stopifnot(nrow(row) == 1)
     value <- if (cell$statistic == "estimate") row$estimate_100 else row$std.error_100
-    claim(cell$claim_id, pp1(value))
+    # Rounded the way the figure script prints its labels. Horiuchi's standard error is
+    # 0.05 to the last bit, which sprintf() prints as the 0.1 on the page and round()
+    # takes to 0.0, so leaving the rounding to the comparison would score a cell the page
+    # and the plot agree on as a mismatch.
+    value <- as.numeric(sprintf("%.1f", value))
+    if (cell$claim_id %in% names(revised_since_deposit)) {
+      claim(cell$claim_id, value, revised_since_deposit[[cell$claim_id]], digits = 1,
+            expect = "derived")
+    } else {
+      claim(cell$claim_id, value, digits = 1)
+    }
   }
 }
 
@@ -409,21 +469,21 @@ cat("  evidence: fielding years present are ",
 # as compared to representative samples (2.3 vs. 1.5 percentage points, respectively)."
 # covers: results :: convenience_estimate_pp
 claim("results :: convenience_estimate_pp",
-      pp1(100 * one(t2, "estimate", group == "Convenience/student sample")))
+      100 * one(t2, "estimate", group == "Convenience/student sample"), digits = 1)
 
 # covers: results :: representative_estimate_pp
 claim("results :: representative_estimate_pp",
-      pp1(100 * one(t2, "estimate", group == "Representative sample")))
+      100 * one(t2, "estimate", group == "Representative sample"), digits = 1)
 
 # "Average effects are slightly larger among American samples than non-American samples
 # (2.3 vs. 1.4 percentage points, respectively)."
 # covers: results :: american_estimate_pp
 claim("results :: american_estimate_pp",
-      pp1(100 * one(t2, "estimate", group == "American sample")))
+      100 * one(t2, "estimate", group == "American sample"), digits = 1)
 
 # covers: results :: non_american_estimate_pp
 claim("results :: non_american_estimate_pp",
-      pp1(100 * one(t2, "estimate", group == "Non-American sample")))
+      100 * one(t2, "estimate", group == "Non-American sample"), digits = 1)
 
 # "However, all estimates for these subtypes, with the exception of the pre-1998 studies,
 # are positive and statistically significant, and none of the differences across types are
@@ -434,7 +494,8 @@ subtypes <- t2 |>
 
 # covers: results :: subtypes_significant_except_pre_1998
 claim("results :: subtypes_significant_except_pre_1998",
-      one(subtypes, "group", positive_and_significant == 0) |> str_extract("\\d{4}"))
+      as.numeric(str_extract(one(subtypes, "group", positive_and_significant == 0), "\\d{4}")),
+      digits = 0)
 cat("  evidence: ",
     str_flatten_comma(str_glue("{subtypes$group}: {sprintf('%.3f', subtypes$estimate)} \\
                                 [{sprintf('%.3f', subtypes$conf.low)}, \\
@@ -459,7 +520,7 @@ contrasts <- tibble(
 )
 
 # covers: results :: no_significant_differences_across_types
-claim("results :: no_significant_differences_across_types", sprintf("%.2f", min(contrasts$p_value)))
+claim("results :: no_significant_differences_across_types", min(contrasts$p_value), digits = 2)
 cat("  evidence: ",
     str_flatten_comma(str_glue("{contrasts$contrast}: p = {sprintf('%.3f', contrasts$p_value)}")),
     "\n", sep = "")
@@ -474,9 +535,14 @@ trim_archive <- t2_trim |> filter(str_starts(rule, "Archive"))
 trim_symmetric <- t2_trim |> filter(str_starts(rule, "Text"))
 
 # covers: results :: trim_percent
-claim("results :: trim_percent",
-      str_glue("{sprintf('%.1f', 100 * trim_archive$n_dropped_low / trim_archive$n_all)} and \\
-                {sprintf('%.1f', 100 * trim_archive$n_dropped_high / trim_archive$n_all)}"))
+# The line prints the bottom tail and names the top one in its label. Errata entry 12
+# carries the sentence as a note, since the deposit cannot say which rule was intended.
+claim("results :: trim_percent", 100 * trim_archive$n_dropped_low / trim_archive$n_all,
+      str_glue("per cent of estimates the published row trims from the bottom, against the ",
+               "5 the sentence names for each tail; it trims ",
+               "{sprintf('%.1f', 100 * trim_archive$n_dropped_high / trim_archive$n_all)} ",
+               "from the top"),
+      digits = 1, expect = "derived")
 cat("  evidence: the published row drops ", trim_archive$n_dropped_low, " study at the bottom and ",
     trim_archive$n_dropped_high, " at the top, retaining ", trim_archive$n_studies, " of ",
     trim_archive$n_all, " at ", sprintf("%.3f", trim_archive$estimate),
@@ -486,7 +552,9 @@ cat("  evidence: the published row drops ", trim_archive$n_dropped_low, " study 
 # "Trimmed (middle 90% of estimates)"
 # covers: table_2 :: trimmed :: label_percent
 claim("table_2 :: trimmed :: label_percent",
-      sprintf("%.0f", 100 * trim_archive$n_studies / nrow(studies)))
+      100 * trim_archive$n_studies / nrow(studies),
+      "per cent of estimates the trimmed row retains, against the label; see errata entry 12",
+      digits = 0, expect = "derived")
 
 # The published table, cell by cell, read back from the formatted entries the pipeline
 # writes rather than from the numbers behind them. No sentence: a table cell is not read
@@ -498,7 +566,7 @@ table_2_groups <- c(post_2014 = "Post-2014 studies", pre_1998 = "Pre-1998 studie
                     trimmed = "Trimmed (middle 90% of estimates)", all_studies = "All studies")
 
 table_2_cells <- published |>
-  filter(location == "table_2", str_detect(claim_id, "label_percent", negate = TRUE)) |>
+  filter(str_starts(claim_id, "table_2 :: "), str_detect(claim_id, "label_percent", negate = TRUE)) |>
   mutate(
     slug = str_split_i(claim_id, fixed(" :: "), 2),
     statistic = str_split_i(claim_id, fixed(" :: "), 3)
@@ -509,12 +577,12 @@ for (i in seq_len(nrow(table_2_cells))) {
   row <- t2 |> filter(group == table_2_groups[[cell$slug]])
   stopifnot(nrow(row) == 1)
   value <- switch(cell$statistic,
-                  estimate = sprintf("%.3f", row$estimate),
-                  std_error = sprintf("%.3f", row$std.error),
-                  conf_low = sprintf("%.3f", row$conf.low),
-                  conf_high = sprintf("%.3f", row$conf.high),
-                  n_studies = format(row$n_studies))
-  claim(cell$claim_id, value)
+                  estimate = row$estimate,
+                  std_error = row$std.error,
+                  conf_low = row$conf.low,
+                  conf_high = row$conf.high,
+                  n_studies = row$n_studies)
+  claim(cell$claim_id, value, digits = if (cell$statistic == "n_studies") 0 else 3)
 }
 
 # ============================================================================
@@ -529,7 +597,7 @@ heading("Results, effects conditional on candidate characteristics (p. 663)")
 # experiences, among other attributes."
 # covers: results :: most_studies_randomized_other_attributes
 claim("results :: most_studies_randomized_other_attributes",
-      sprintf("%.3f", fa1$n_studies / nrow(studies)))
+      fa1$n_studies / nrow(studies), digits = 3)
 cat("  evidence: ", fa1$n_studies, " of ", nrow(studies),
     " studies contribute conditional effects on another randomized attribute\n", sep = "")
 
@@ -538,7 +606,7 @@ cat("  evidence: ", fa1$n_studies, " of ", nrow(studies),
 claim("results :: n_cates", fa1$n_cates)
 
 # covers: results :: cates_majority_positive
-claim("results :: cates_majority_positive", sprintf("%.3f", fa1$prop_positive))
+claim("results :: cates_majority_positive", fa1$prop_positive, digits = 3)
 cat("  evidence: ", fa1$n_positive, " of ", fa1$n_cates,
     " conditional effects are positive, across ", fa1$n_studies, " studies\n", sep = "")
 
@@ -552,14 +620,14 @@ claim("results :: n_cand_race_studies", one(f2_pooled, "n_studies", cand_white =
 # these two estimates is not statistically significant (p p .104)."
 # covers: results :: white_cand_cate_pp
 claim("results :: white_cand_cate_pp",
-      pp1(100 * one(f2_pooled, "estimate", cand_white == "White candidate")))
+      100 * one(f2_pooled, "estimate", cand_white == "White candidate"), digits = 1)
 
 # covers: results :: black_cand_cate_pp
 claim("results :: black_cand_cate_pp",
-      pp1(100 * one(f2_pooled, "estimate", cand_white == "Black candidate")))
+      100 * one(f2_pooled, "estimate", cand_white == "Black candidate"), digits = 1)
 
 # covers: results :: cand_race_diff_p
-claim("results :: cand_race_diff_p", sprintf("%.3f", f2_diff$p.value))
+claim("results :: cand_race_diff_p", f2_diff$p.value, digits = 3)
 
 heading("Figure 2, estimates and standard errors printed beside every row (p. 663)")
 print_figure_cells("figure_2")
@@ -580,14 +648,14 @@ claim("results :: n_resp_gender_studies", one(f3_pooled, "n_studies", resp_femal
 # providing some support for the gender affinity hypothesis."
 # covers: results :: female_resp_cate_pp
 claim("results :: female_resp_cate_pp",
-      pp1(100 * one(f3_pooled, "estimate", resp_female == "Female respondents")))
+      100 * one(f3_pooled, "estimate", resp_female == "Female respondents"), digits = 1)
 
 # covers: results :: male_resp_cate_pp
 claim("results :: male_resp_cate_pp",
-      pp1(100 * one(f3_pooled, "estimate", resp_female == "Male respondents")))
+      100 * one(f3_pooled, "estimate", resp_female == "Male respondents"), digits = 1)
 
 # covers: results :: resp_gender_diff_p
-claim("results :: resp_gender_diff_p", sprintf("%.3f", f3_diff$p.value))
+claim("results :: resp_gender_diff_p", f3_diff$p.value, digits = 3)
 
 heading("Figure 3, estimates and standard errors printed beside every row (p. 664)")
 print_figure_cells("figure_3")
@@ -605,20 +673,20 @@ claim("results :: n_resp_pid_studies",
 # The published minus sign is typeset as a 2 in the article's text layer.
 # covers: results :: republican_cate_pp
 claim("results :: republican_cate_pp",
-      pp1(100 * one(f4_pooled, "estimate", resp_pid_3 == "Republican respondents")))
+      100 * one(f4_pooled, "estimate", resp_pid_3 == "Republican respondents"), digits = 1)
 
 # covers: results :: independent_cate_pp
 claim("results :: independent_cate_pp",
-      pp1(100 * one(f4_pooled, "estimate", resp_pid_3 == "Independent respondents")))
+      100 * one(f4_pooled, "estimate", resp_pid_3 == "Independent respondents"), digits = 1)
 
 # covers: results :: democrat_cate_pp
 claim("results :: democrat_cate_pp",
-      pp1(100 * one(f4_pooled, "estimate", resp_pid_3 == "Democratic respondents")))
+      100 * one(f4_pooled, "estimate", resp_pid_3 == "Democratic respondents"), digits = 1)
 
 # "The Republican estimate is statistically significantly different from the Democratic and
 # Independent estimates."
 # covers: results :: republican_differs_from_dem_and_ind
-claim("results :: republican_differs_from_dem_and_ind", sprintf("%.2f", max(f4_diff$p.value)))
+claim("results :: republican_differs_from_dem_and_ind", max(f4_diff$p.value), digits = 2)
 cat("  evidence: ",
     str_flatten_comma(str_glue("{f4_diff$comparison}: p = {format(f4_diff$p.value, digits = 3)}")),
     "\n", sep = "")
@@ -640,12 +708,12 @@ claim("discussion :: n_studies", nrow(studies))
 # "Our main finding is that the average effect of being a woman candidate is a 1.8
 # percentage point increase in support."
 # covers: discussion :: pooled_ate_pp
-claim("discussion :: pooled_ate_pp", pp1(100 * f1_pooled$estimate))
+claim("discussion :: pooled_ate_pp", 100 * f1_pooled$estimate, digits = 1)
 
 # "We observe considerable study-to-study variation, although more than three-fourths of
 # the studies show a positive effect."
 # covers: discussion :: share_positive_fraction
-claim("discussion :: share_positive_fraction", sprintf("%.3f", mean(studies$estimate > 0)))
+claim("discussion :: share_positive_fraction", mean(studies$estimate > 0), digits = 3)
 cat("  evidence: ", sum(studies$estimate > 0), " of ", nrow(studies),
     " estimates are positive, a share of ", sprintf("%.1f", 100 * mean(studies$estimate > 0)),
     " per cent\n", sep = "")
@@ -669,7 +737,11 @@ heading("Appendix A (pp. 2-33)")
 # The published table lists one row per study whose other randomized attributes the
 # appendix reports. The count is the table's own row count.
 # covers: table_a1 :: n_studies_listed
-claim("table_a1 :: n_studies_listed", nrow(ta1))
+# The table lists 43; errata entry 5 restores the missing row, a float correction with no
+# corrected value to score against, so the count is declared rather than asserted.
+claim("table_a1 :: n_studies_listed", nrow(ta1),
+      "studies with per-study appendix figures, against the rows the published table lists",
+      expect = "derived")
 
 # "Figure A.1 shows the distribution of CATEs, conditional on each of the attributes listed
 # in Table A.1."
@@ -684,7 +756,7 @@ heading("Figures A.2 to A.45, estimates and standard errors printed beside every
 # every row, exactly as the four main figures do. Those labels are compared here one by one
 # against what the pipeline plots. No sentence: they are read off a page.
 appendix_cells <- published |>
-  filter(str_detect(location, "^figure_a\\d+$"), location != "figure_a1",
+  filter(str_detect(claim_id, "^figure_a\\d+ :: "), !str_starts(claim_id, "figure_a1 :: "),
          str_detect(claim_id, " :: (estimate|std_error)$")) |>
   mutate(
     statistic = str_split_i(claim_id, fixed(" :: "), -1),
@@ -700,7 +772,8 @@ for (i in seq_len(nrow(appendix_cells))) {
     filter(figure_number == cell$figure_number, cate_label == cell$cate_label)
   stopifnot(nrow(row) == 1)
   value <- if (cell$statistic == "estimate") row$estimate_100 else row$std.error_100
-  claim(cell$claim_id, pp1(value))
+  # Rounded the way the figure script prints its labels, as for the main figures.
+  claim(cell$claim_id, as.numeric(sprintf("%.1f", value)), digits = 1)
 }
 
 # Figure A.18 is Costa (2020), whose attribute levels are whole tweets. At the width the
@@ -708,7 +781,11 @@ for (i in seq_len(nrow(appendix_cells))) {
 # labels and the axis off the right edge of the page, so the published figure prints none
 # of its ten estimates and its axis title is cut off mid-word. The pipeline draws ten.
 # covers: figure_a18 :: printed_estimates
-claim("figure_a18 :: printed_estimates", sum(fa2_cells$figure_number == 18))
+# Errata entry 4 reprints the figure legibly. The line counts the estimates the pipeline
+# draws, against the none the published figure shows.
+claim("figure_a18 :: printed_estimates", sum(fa2_cells$figure_number == 18),
+      "estimates the pipeline draws in Figure A.18, against the none the published figure shows",
+      expect = "derived")
 
 # ============================================================================
 # Appendix B: digital measurement of coefficient estimates (pp. 34-35)
@@ -725,10 +802,17 @@ heading("Appendix B (pp. 34-35)")
 measured <- studies |> filter(digitally_measured == 1)
 
 # covers: appendix_b :: n_digitally_measured_experiments
-claim("appendix_b :: n_digitally_measured_experiments", nrow(measured))
+# The note field marks ten experiments in eight papers where the appendix says nine in
+# seven, and a free-text field cannot say which count was meant. Errata entry 14 carries
+# the sentence as a note.
+claim("appendix_b :: n_digitally_measured_experiments", nrow(measured),
+      "experiments the deposit's note field marks as digitally measured, against the nine the appendix names",
+      expect = "derived")
 
 # covers: appendix_b :: n_digitally_measured_papers
-claim("appendix_b :: n_digitally_measured_papers", n_distinct(measured$bib_entry))
+claim("appendix_b :: n_digitally_measured_papers", n_distinct(measured$bib_entry),
+      "papers those experiments come from, against the seven the appendix names",
+      expect = "derived")
 cat("  evidence: ", str_flatten_comma(measured$study_name_short), "\n", sep = "")
 
 # "The average absolute error is 0.000747, or 0.075 percentage points. The correlation of
@@ -737,19 +821,17 @@ cat("  evidence: ", str_flatten_comma(measured$study_name_short), "\n", sep = ""
 # against estimates computed from their raw data. The deposit carries neither, so neither
 # number is reconstructible from it; see build_ground_truth.R, which records the reason.
 # covers: appendix_b :: mean_absolute_error
-claim("appendix_b :: mean_absolute_error", absent)
+claim("appendix_b :: mean_absolute_error", NA_real_, expect = "absent")
 
 # covers: appendix_b :: mean_absolute_error_pp
-claim("appendix_b :: mean_absolute_error_pp", absent)
+claim("appendix_b :: mean_absolute_error_pp", NA_real_, expect = "absent")
 
 # covers: appendix_b :: correlation
-claim("appendix_b :: correlation", absent)
+claim("appendix_b :: correlation", NA_real_, expect = "absent")
 
-# ============================================================================
-# Coverage
-# ============================================================================
-
-heading("Coverage")
-
-stopifnot(!any(duplicated(printed)))
-cat("Printed ", length(printed), " claims.\n", sep = "")
+# Gates ----
+# assert_claims() stops on any failing verdict, on a quantity erratum whose claim was not
+# printed or did not score [corrected], and on any difference between the claims printed
+# and those the extraction marks needs_block. claim_summary() prints the verdict counts.
+assert_claims()
+invisible(claim_summary())

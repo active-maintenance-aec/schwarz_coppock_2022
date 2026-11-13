@@ -1,0 +1,55 @@
+float,published_numbers,covered,reproduced_by_rewrite,reproduced_by_archive,plotted,plotted_reproduced,note
+Table 1,136,136,136,NA,NA,NA,NA
+Table 2,41,41,40,NA,NA,NA,The trimmed row's label prints a share the row does not retain (errata entry 12).
+Figure 1,136,136,136,NA,68,68,NA
+Figure 2,68,68,68,NA,34,34,NA
+Figure 3,152,152,150,NA,76,74,Two Sen (2017) SSI 2 estimates come from a deposited file one revision behind the figure (errata entry 15).
+Figure 4,116,116,116,NA,58,58,NA
+Table A.1,0,0,0,NA,NA,NA,"Prints no numbers: one row per study and a prose description of its attributes. Its row count is a structural claim, corrected by errata entry 5."
+Figure A.1,0,0,0,NA,954,954,Prints no numbers on its face; plotted counts the conditional effects the appendix says it draws.
+Figure A.2,4,4,4,NA,2,2,NA
+Figure A.3,58,58,58,NA,29,29,NA
+Figure A.4,58,58,58,NA,29,29,NA
+Figure A.5,140,140,140,NA,70,70,NA
+Figure A.6,140,140,140,NA,70,70,NA
+Figure A.7,44,44,44,NA,22,22,NA
+Figure A.8,68,68,68,NA,34,34,NA
+Figure A.9,58,58,58,NA,29,29,NA
+Figure A.10,26,26,26,NA,13,13,NA
+Figure A.11,22,22,22,NA,11,11,NA
+Figure A.12,16,16,16,NA,8,8,NA
+Figure A.13,12,12,12,NA,6,6,NA
+Figure A.14,20,20,20,NA,10,10,NA
+Figure A.15,26,26,26,NA,13,13,NA
+Figure A.16,34,34,34,NA,17,17,NA
+Figure A.17,34,34,34,NA,17,17,NA
+Figure A.18,0,0,0,NA,0,0,Prints none of the 10 estimates it is drawn from: the row labels push the panel off the page (errata entry 4).
+Figure A.19,28,28,28,NA,14,14,NA
+Figure A.20,38,38,38,NA,19,19,NA
+Figure A.21,76,76,76,NA,38,38,NA
+Figure A.22,38,38,38,NA,19,19,NA
+Figure A.23,38,38,38,NA,19,19,NA
+Figure A.24,166,166,166,NA,83,83,NA
+Figure A.25,8,8,8,NA,4,4,NA
+Figure A.26,50,50,50,NA,25,25,NA
+Figure A.27,28,28,28,NA,14,14,NA
+Figure A.28,34,34,34,NA,17,17,NA
+Figure A.29,44,44,44,NA,22,22,NA
+Figure A.30,50,50,50,NA,25,25,NA
+Figure A.31,114,114,114,NA,57,57,NA
+Figure A.32,22,22,22,NA,11,11,NA
+Figure A.33,30,30,30,NA,15,15,NA
+Figure A.34,24,24,24,NA,12,12,NA
+Figure A.35,8,8,8,NA,4,4,NA
+Figure A.36,30,30,30,NA,15,15,NA
+Figure A.37,18,18,18,NA,9,9,NA
+Figure A.38,30,30,30,NA,15,15,NA
+Figure A.39,32,32,32,NA,16,16,NA
+Figure A.40,32,32,32,NA,16,16,NA
+Figure A.41,64,64,64,NA,32,32,NA
+Figure A.42,54,54,54,NA,27,27,NA
+Figure A.43,38,38,38,NA,19,19,NA
+Figure A.44,4,4,4,NA,2,2,NA
+Figure A.45,30,30,30,NA,15,15,NA
+Figure B.46,0,0,0,NA,NA,NA,A screenshot of the measurement tool; carries no data.
+Figure B.47,0,0,0,NA,NA,NA,"Plots digital measurements against direct estimates for Kirkland and Coppock (2018, Figure 3). The deposit carries neither, and the markers overplot, so the plotted count is not read."

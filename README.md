@@ -16,7 +16,10 @@
 - [Rewrite verification](#rewrite-verification)
 - [R environment](#r-environment)
 
-**Archived at Zenodo:** [doi:10.5281/zenodo.24168421](https://doi.org/10.5281/zenodo.24168421). This DOI always resolves to the latest release of the maintained version.
+**Archived at Zenodo:**
+[doi:10.5281/zenodo.24168421](https://doi.org/10.5281/zenodo.24168421).
+This DOI always resolves to the latest release of the maintained
+version.
 
 *Drafted by Claude Opus 5 under the supervision of Alex Coppock.*
 
@@ -306,15 +309,15 @@ in that window produces the same two groups of 63 and 4.
 
 | Table or figure | Reproduces | Not stated in the article | Does not reproduce |
 |:----------------|-----------:|--------------------------:|-------------------:|
-| figure_1        |          5 |                         0 |                  0 |
-| figure_2        |          6 |                         5 |                  0 |
-| figure_3        |          6 |                         5 |                  1 |
-| figure_4        |          7 |                         8 |                  0 |
-| figure_a1       |          3 |                         0 |                  0 |
-| table_1         |          3 |                         1 |                  0 |
-| table_2         |         40 |                         1 |                  0 |
-| table_a1        |          0 |                         0 |                  1 |
-| text            |          2 |                         2 |                  4 |
+| Figure 1        |          5 |                         0 |                  0 |
+| Figure 2        |          6 |                         5 |                  0 |
+| Figure 3        |          6 |                         5 |                  1 |
+| Figure 4        |          7 |                         8 |                  0 |
+| Figure A.1      |          3 |                         0 |                  0 |
+| Table 1         |          3 |                         1 |                  0 |
+| Table 2         |         40 |                         1 |                  0 |
+| Table A.1       |          0 |                         0 |                  1 |
+| Text            |          2 |                         2 |                  4 |
 
 Ground truth: 100 recorded quantities, by where the article states them.
 
@@ -333,12 +336,12 @@ separately, in the next section.
 
 | Table or figure | Claim | Article | Deposit | Note |
 |:---|:---|:---|:---|:---|
-| text | n_negative | 18 | 19 | Text: 18 are negative. The deposit has 19 negative, one exactly zero and 47 positive, which sums to 67; the published 47 plus 18 sums to 65 |
-| text | n_pos_and_sig_ci_rule | 23 | 29 | Text: 47 estimates are positive (23 significant). The deposited script and the rewrite both give 29 under the interval rule the deposit applies, and no rule the deposit supports gives 23. Both counts rise as a threshold is relaxed, so no threshold gives 23 and 11 at once: reaching 11 negative would leave 44 positive. The count is stated without a hedge, so it is compared as printed. |
-| text | n_neg_and_sig_ci_rule | 11 | 6 | Text: 18 are negative (11 significant). The deposited script and the rewrite both give 6 and no rule reaches 11; see the note on the positive count. |
-| text | prop_positive | 0.75 | 0.7014925373134329 | Discussion states more than three-fourths of the studies show a positive effect. value_paper records that lower bound rather than an equality; 47 of 67 is 0.701, so the claim does not hold |
-| figure_3 | n_studies_in_text | 36 | 37 | Text: for the 36 experiments where we were able to identify respondent gender. The deposit and the paper’s own figure both have 37 |
-| table_a1 | n_studies_listed | 43 | 44 | Published Table A.1 lists 43 studies. Simas and Murdoch (2019) has a CATE figure at A.44 but no Table A.1 row |
+| Text | n_negative | 18 | 19 | Text: 18 are negative. The deposit has 19 negative, one exactly zero and 47 positive, which sums to 67; the published 47 plus 18 sums to 65. Archive category 2. |
+| Text | n_pos_and_sig_ci_rule | 23 | 29 | Text: 47 estimates are positive (23 significant). The deposited script and the rewrite both give 29 under the interval rule the deposit applies, and no rule the deposit supports gives 23. Both counts rise as a threshold is relaxed, so no threshold gives 23 and 11 at once: reaching 11 negative would leave 44 positive. The count is stated without a hedge, so it is compared as printed. Archive category 2. |
+| Text | n_neg_and_sig_ci_rule | 11 | 6 | Text: 18 are negative (11 significant). The deposited script and the rewrite both give 6 and no rule reaches 11; see the note on the positive count. Archive category 2. |
+| Text | prop_positive | 0.75 | 0.7014925373134329 | Discussion states more than three-fourths of the studies show a positive effect. value_paper records that lower bound rather than an equality; 47 of 67 is 0.701, so the claim does not hold. Archive category 2. |
+| Figure 3 | n_studies_in_text | 36 | 37 | Text: for the 36 experiments where we were able to identify respondent gender. The deposit and the paper’s own figure both have 37. Archive category 2. |
+| Table A.1 | n_studies_listed | 43 | 44 | Published Table A.1 lists 43 studies. Simas and Murdoch (2019) has a CATE figure at A.44 but no Table A.1 row. Archive category 2. |
 
 The 6 recorded quantities that do not reproduce.
 
@@ -373,25 +376,25 @@ extraction, and stops if the two instruments disagree anywhere, so
 neither can quietly stop checking.
 
 | Where the article prints it | Claims | Reproduces | Does not | No counterpart |
-|:----------------------------|-------:|-----------:|---------:|---------------:|
-| abstract                    |      2 |          2 |        0 |              0 |
-| appendix_a                  |      1 |          0 |        0 |              1 |
-| appendix_b                  |      5 |          0 |        2 |              3 |
-| design                      |     12 |          9 |        1 |              2 |
-| discussion                  |      7 |          4 |        1 |              2 |
-| figure_1                    |    137 |        137 |        0 |              0 |
-| figure_2                    |     68 |         68 |        0 |              0 |
-| figure_3                    |    152 |        150 |        2 |              0 |
-| figure_4                    |    116 |        116 |        0 |              0 |
-| figure_a1                   |      1 |          1 |        0 |              0 |
-| figure_a2 to figure_a45     |   1889 |       1888 |        1 |              0 |
-| intro                       |     11 |          4 |        0 |              7 |
-| results                     |     34 |         29 |        5 |              0 |
-| table_1                     |    136 |        136 |        0 |              0 |
-| table_2                     |     41 |         40 |        1 |              0 |
-| table_a1                    |      1 |          0 |        1 |              0 |
-| theory                      |     10 |          2 |        1 |              7 |
-| title                       |      1 |          1 |        0 |              0 |
+|:---|---:|---:|---:|---:|
+| Abstract, p. 655 | 2 | 2 | 0 | 0 |
+| Appendix A, pp. 2-33 | 1 | 0 | 0 | 1 |
+| Appendix B, pp. 34-35 | 5 | 0 | 2 | 3 |
+| Design, pp. 659-661 | 12 | 9 | 1 | 2 |
+| Discussion, pp. 664-665 | 7 | 4 | 1 | 2 |
+| Figure 1 | 137 | 137 | 0 | 0 |
+| Figure 2 | 68 | 68 | 0 | 0 |
+| Figure 3 | 152 | 150 | 2 | 0 |
+| Figure 4 | 116 | 116 | 0 | 0 |
+| Figure A.1 | 1 | 1 | 0 | 0 |
+| Figures A.2 to A.45 | 1889 | 1888 | 1 | 0 |
+| Introduction, pp. 655-657 | 11 | 4 | 0 | 7 |
+| Results, pp. 661-664 | 34 | 29 | 5 | 0 |
+| Table 1 | 136 | 136 | 0 | 0 |
+| Table 2 | 41 | 40 | 1 | 0 |
+| Table A.1 | 1 | 0 | 1 | 0 |
+| Supply and demand explanations, pp. 657-659 | 10 | 2 | 1 | 7 |
+| Title, p. 655 | 1 | 1 | 0 | 0 |
 
 Published numbers against the deposit, by where the article prints them.
 
@@ -515,84 +518,84 @@ alt="Figure A.1. All 954 CATEs of candidate gender conditional on the other rand
 
 | Table or figure | Claim | Article | Deposit | Rewrite | Deposit matches | Rewrite matches |
 |:---|:---|:---|:---|:---|---:|---:|
-| table_1 | n_studies | 67 | 67 | 67 | 1 | 1 |
-| table_1 | n_subjects_total | 120601 | 120601 | 120601 | 1 | 1 |
-| table_1 | n_ratings_total | 774971 | 774971 | 774971 | 1 | 1 |
-| figure_1 | re_meta_estimate_pp | 1.8 | 1.8421458705235139 | 1.842145870523515 | 1 | 1 |
-| figure_1 | re_meta_se_pp | 0.4 | 0.354595479723342 | 0.354595479723342 | 1 | 1 |
-| figure_1 | re_meta_ci_low_pp | 1.1 | 1.14715150118506 | 1.147151501185061 | 1 | 1 |
-| figure_1 | re_meta_ci_high_pp | 2.5 | 2.537140239861967 | 2.537140239861968 | 1 | 1 |
-| figure_1 | n_studies | 67 | 67 | 67 | 1 | 1 |
-| text | n_positive | 47 | 47 | 47 | 1 | 1 |
-| text | n_negative | 18 | 19 | 19 | 0 | 0 |
-| text | n_exactly_zero | 1 | 1 | 1 | 1 | 1 |
-| text | n_pos_and_sig_ci_rule | 23 | 29 | 29 | 0 | 0 |
-| text | n_neg_and_sig_ci_rule | 11 | 6 | 6 | 0 | 0 |
-| text | prop_positive | 0.75 | 0.7014925373134329 | 0.7014925373134329 | 0 | 0 |
-| table_2 | post_2014_studies_estimate | 0.021 | 0.02076852592631652 | 0.02076852592631653 | 1 | 1 |
-| table_2 | post_2014_studies_std_error | 0.004 | 0.00353901936870558 | 0.00353901936870559 | 1 | 1 |
-| table_2 | post_2014_studies_conf_low | 0.014 | 0.01383217542306389 | 0.0138321754230639 | 1 | 1 |
-| table_2 | post_2014_studies_conf_high | 0.028 | 0.02770487642956915 | 0.02770487642956917 | 1 | 1 |
-| table_2 | post_2014_studies_n_studies | 63 | 63 | 63 | 1 | 1 |
-| table_2 | pre_1998_studies_estimate | -0.047 | -0.04670204241768256 | -0.04670204241768255 | 1 | 1 |
-| table_2 | pre_1998_studies_std_error | 0.037 | 0.03660122845561661 | 0.0366012284556166 | 1 | 1 |
-| table_2 | pre_1998_studies_conf_low | -0.118 | -0.11843913198061368 | -0.11843913198061368 | 1 | 1 |
-| table_2 | pre_1998_studies_conf_high | 0.025 | 0.02503504714524856 | 0.02503504714524856 | 1 | 1 |
-| table_2 | pre_1998_studies_n_studies | 4 | 4 | 4 | 1 | 1 |
-| table_2 | convenience_student_sample_estimate | 0.023 | 0.02297025791106249 | 0.02297025791106249 | 1 | 1 |
-| table_2 | convenience_student_sample_std_error | 0.006 | 0.00566850898752522 | 0.00566850898752521 | 1 | 1 |
-| table_2 | convenience_student_sample_conf_low | 0.012 | 0.01186018444947145 | 0.01186018444947146 | 1 | 1 |
-| table_2 | convenience_student_sample_conf_high | 0.034 | 0.03408033137265354 | 0.03408033137265353 | 1 | 1 |
-| table_2 | convenience_student_sample_n_studies | 31 | 31 | 31 | 1 | 1 |
-| table_2 | representative_sample_estimate | 0.015 | 0.01493099437674829 | 0.01493099437674828 | 1 | 1 |
-| table_2 | representative_sample_std_error | 0.005 | 0.00538611304870334 | 0.00538611304870334 | 1 | 1 |
-| table_2 | representative_sample_conf_low | 0.004 | 0.00437440678462851 | 0.00437440678462851 | 1 | 1 |
-| table_2 | representative_sample_conf_high | 0.025 | 0.02548758196886806 | 0.02548758196886806 | 1 | 1 |
-| table_2 | representative_sample_n_studies | 36 | 36 | 36 | 1 | 1 |
-| table_2 | american_sample_estimate | 0.023 | 0.02316935766935101 | 0.02316935766935102 | 1 | 1 |
-| table_2 | american_sample_std_error | 0.006 | 0.00606511531362025 | 0.00606511531362025 | 1 | 1 |
-| table_2 | american_sample_conf_low | 0.011 | 0.01128195009257296 | 0.01128195009257297 | 1 | 1 |
-| table_2 | american_sample_conf_high | 0.035 | 0.03505676524612906 | 0.03505676524612908 | 1 | 1 |
-| table_2 | american_sample_n_studies | 35 | 35 | 35 | 1 | 1 |
-| table_2 | non_american_sample_estimate | 0.014 | 0.01374151072947667 | 0.01374151072947667 | 1 | 1 |
-| table_2 | non_american_sample_std_error | 0.005 | 0.00484683076012992 | 0.00484683076012992 | 1 | 1 |
-| table_2 | non_american_sample_conf_low | 0.004 | 0.00424189700046112 | 0.00424189700046112 | 1 | 1 |
-| table_2 | non_american_sample_conf_high | 0.023 | 0.02324112445849222 | 0.02324112445849222 | 1 | 1 |
-| table_2 | non_american_sample_n_studies | 32 | 32 | 32 | 1 | 1 |
-| table_2 | trimmed_middle_90_of_estimates_estimate | 0.018 | 0.01760270448260373 | 0.01760270448260372 | 1 | 1 |
-| table_2 | trimmed_middle_90_of_estimates_std_error | 0.003 | 0.00296095651140167 | 0.00296095651140167 | 1 | 1 |
-| table_2 | trimmed_middle_90_of_estimates_conf_low | 0.012 | 0.01179933636046708 | 0.01179933636046707 | 1 | 1 |
-| table_2 | trimmed_middle_90_of_estimates_conf_high | 0.023 | 0.02340607260474038 | 0.02340607260474037 | 1 | 1 |
-| table_2 | trimmed_middle_90_of_estimates_n_studies | 61 | 61 | 61 | 1 | 1 |
-| table_2 | all_studies_estimate | 0.018 | 0.01842145870523514 | 0.01842145870523515 | 1 | 1 |
-| table_2 | all_studies_std_error | 0.004 | 0.00354595479723342 | 0.00354595479723342 | 1 | 1 |
-| table_2 | all_studies_conf_low | 0.011 | 0.0114715150118506 | 0.01147151501185061 | 1 | 1 |
-| table_2 | all_studies_conf_high | 0.025 | 0.02537140239861967 | 0.02537140239861968 | 1 | 1 |
-| table_2 | all_studies_n_studies | 67 | 67 | 67 | 1 | 1 |
-| figure_2 | black_cand_estimate_pp | 0.9 | 0.924095993624055 | 0.924095993624055 | 1 | 1 |
-| figure_2 | black_cand_se_pp | 0.4 | 0.403949584944996 | 0.403949584944996 | 1 | 1 |
-| figure_2 | white_cand_estimate_pp | 2.2 | 2.243283459448613 | 2.243283459448615 | 1 | 1 |
-| figure_2 | white_cand_se_pp | 0.7 | 0.704882012460991 | 0.704882012460991 | 1 | 1 |
-| figure_2 | n_studies | 16 | 16 | 16 | 1 | 1 |
-| figure_2 | diff_in_cates_pvalue | 0.104 | 0.10442580239427804 | 0.1044258023942776 | 1 | 1 |
-| figure_3 | female_resp_estimate_pp | 3.0 | 3.005785735908717 | 3.0057857359087192 | 1 | 1 |
-| figure_3 | female_resp_se_pp | 0.5 | 0.532093754832003 | 0.532093754832003 | 1 | 1 |
-| figure_3 | male_resp_estimate_pp | 0.9 | 0.85476192509097 | 0.85476192509097 | 1 | 1 |
-| figure_3 | male_resp_se_pp | 0.5 | 0.509847917506916 | 0.509847917506916 | 1 | 1 |
-| figure_3 | n_studies_in_figure | 37 | 37 | 37 | 1 | 1 |
-| figure_3 | n_studies_in_text | 36 | 37 | 37 | 0 | 0 |
-| figure_3 | diff_in_cates_pvalue | 0.004 | 0.0035127926564261 | 0.00351279265642609 | 1 | 1 |
-| figure_4 | dem_resp_estimate_pp | 4.2 | 4.154259026957203 | 4.154259026957201 | 1 | 1 |
-| figure_4 | dem_resp_se_pp | 0.8 | 0.799277010412441 | 0.799277010412441 | 1 | 1 |
-| figure_4 | ind_resp_estimate_pp | 3.3 | 3.276867581970807 | 3.2768675819708095 | 1 | 1 |
-| figure_4 | ind_resp_se_pp | 0.8 | 0.804774319348512 | 0.8047743193485131 | 1 | 1 |
-| figure_4 | rep_resp_estimate_pp | -1.4 | -1.417655835707809 | -1.417655835707809 | 1 | 1 |
-| figure_4 | rep_resp_se_pp | 0.4 | 0.363468843734238 | 0.363468843734238 | 1 | 1 |
-| figure_4 | n_studies | 20 | 20 | 20 | 1 | 1 |
-| figure_a1 | n_cates | 954 | 954 | 954 | 1 | 1 |
-| figure_a1 | prop_cates_positive | 0.5 | 0.69916142557652 | 0.69916142557652 | 1 | 1 |
-| figure_a1 | n_attribute_studies | 44 | 44 | 44 | 1 | 1 |
-| table_a1 | n_studies_listed | 43 | 44 | 44 | 0 | 0 |
+| Table 1 | n_studies | 67 | 67 | 67 | 1 | 1 |
+| Table 1 | n_subjects_total | 120601 | 120601 | 120601 | 1 | 1 |
+| Table 1 | n_ratings_total | 774971 | 774971 | 774971 | 1 | 1 |
+| Figure 1 | re_meta_estimate_pp | 1.8 | 1.8421458705235139 | 1.842145870523515 | 1 | 1 |
+| Figure 1 | re_meta_se_pp | 0.4 | 0.354595479723342 | 0.354595479723342 | 1 | 1 |
+| Figure 1 | re_meta_ci_low_pp | 1.1 | 1.14715150118506 | 1.147151501185061 | 1 | 1 |
+| Figure 1 | re_meta_ci_high_pp | 2.5 | 2.537140239861967 | 2.537140239861968 | 1 | 1 |
+| Figure 1 | n_studies | 67 | 67 | 67 | 1 | 1 |
+| Text | n_positive | 47 | 47 | 47 | 1 | 1 |
+| Text | n_negative | 18 | 19 | 19 | 0 | 0 |
+| Text | n_exactly_zero | 1 | 1 | 1 | 1 | 1 |
+| Text | n_pos_and_sig_ci_rule | 23 | 29 | 29 | 0 | 0 |
+| Text | n_neg_and_sig_ci_rule | 11 | 6 | 6 | 0 | 0 |
+| Text | prop_positive | 0.75 | 0.7014925373134329 | 0.7014925373134329 | 0 | 0 |
+| Table 2 | post_2014_studies_estimate | 0.021 | 0.02076852592631652 | 0.02076852592631653 | 1 | 1 |
+| Table 2 | post_2014_studies_std_error | 0.004 | 0.00353901936870558 | 0.00353901936870559 | 1 | 1 |
+| Table 2 | post_2014_studies_conf_low | 0.014 | 0.01383217542306389 | 0.0138321754230639 | 1 | 1 |
+| Table 2 | post_2014_studies_conf_high | 0.028 | 0.02770487642956915 | 0.02770487642956917 | 1 | 1 |
+| Table 2 | post_2014_studies_n_studies | 63 | 63 | 63 | 1 | 1 |
+| Table 2 | pre_1998_studies_estimate | -0.047 | -0.04670204241768256 | -0.04670204241768255 | 1 | 1 |
+| Table 2 | pre_1998_studies_std_error | 0.037 | 0.03660122845561661 | 0.0366012284556166 | 1 | 1 |
+| Table 2 | pre_1998_studies_conf_low | -0.118 | -0.11843913198061368 | -0.11843913198061368 | 1 | 1 |
+| Table 2 | pre_1998_studies_conf_high | 0.025 | 0.02503504714524856 | 0.02503504714524856 | 1 | 1 |
+| Table 2 | pre_1998_studies_n_studies | 4 | 4 | 4 | 1 | 1 |
+| Table 2 | convenience_student_sample_estimate | 0.023 | 0.02297025791106249 | 0.02297025791106249 | 1 | 1 |
+| Table 2 | convenience_student_sample_std_error | 0.006 | 0.00566850898752522 | 0.00566850898752521 | 1 | 1 |
+| Table 2 | convenience_student_sample_conf_low | 0.012 | 0.01186018444947145 | 0.01186018444947146 | 1 | 1 |
+| Table 2 | convenience_student_sample_conf_high | 0.034 | 0.03408033137265354 | 0.03408033137265353 | 1 | 1 |
+| Table 2 | convenience_student_sample_n_studies | 31 | 31 | 31 | 1 | 1 |
+| Table 2 | representative_sample_estimate | 0.015 | 0.01493099437674829 | 0.01493099437674828 | 1 | 1 |
+| Table 2 | representative_sample_std_error | 0.005 | 0.00538611304870334 | 0.00538611304870334 | 1 | 1 |
+| Table 2 | representative_sample_conf_low | 0.004 | 0.00437440678462851 | 0.00437440678462851 | 1 | 1 |
+| Table 2 | representative_sample_conf_high | 0.025 | 0.02548758196886806 | 0.02548758196886806 | 1 | 1 |
+| Table 2 | representative_sample_n_studies | 36 | 36 | 36 | 1 | 1 |
+| Table 2 | american_sample_estimate | 0.023 | 0.02316935766935101 | 0.02316935766935102 | 1 | 1 |
+| Table 2 | american_sample_std_error | 0.006 | 0.00606511531362025 | 0.00606511531362025 | 1 | 1 |
+| Table 2 | american_sample_conf_low | 0.011 | 0.01128195009257296 | 0.01128195009257297 | 1 | 1 |
+| Table 2 | american_sample_conf_high | 0.035 | 0.03505676524612906 | 0.03505676524612908 | 1 | 1 |
+| Table 2 | american_sample_n_studies | 35 | 35 | 35 | 1 | 1 |
+| Table 2 | non_american_sample_estimate | 0.014 | 0.01374151072947667 | 0.01374151072947667 | 1 | 1 |
+| Table 2 | non_american_sample_std_error | 0.005 | 0.00484683076012992 | 0.00484683076012992 | 1 | 1 |
+| Table 2 | non_american_sample_conf_low | 0.004 | 0.00424189700046112 | 0.00424189700046112 | 1 | 1 |
+| Table 2 | non_american_sample_conf_high | 0.023 | 0.02324112445849222 | 0.02324112445849222 | 1 | 1 |
+| Table 2 | non_american_sample_n_studies | 32 | 32 | 32 | 1 | 1 |
+| Table 2 | trimmed_middle_90_of_estimates_estimate | 0.018 | 0.01760270448260373 | 0.01760270448260372 | 1 | 1 |
+| Table 2 | trimmed_middle_90_of_estimates_std_error | 0.003 | 0.00296095651140167 | 0.00296095651140167 | 1 | 1 |
+| Table 2 | trimmed_middle_90_of_estimates_conf_low | 0.012 | 0.01179933636046708 | 0.01179933636046707 | 1 | 1 |
+| Table 2 | trimmed_middle_90_of_estimates_conf_high | 0.023 | 0.02340607260474038 | 0.02340607260474037 | 1 | 1 |
+| Table 2 | trimmed_middle_90_of_estimates_n_studies | 61 | 61 | 61 | 1 | 1 |
+| Table 2 | all_studies_estimate | 0.018 | 0.01842145870523514 | 0.01842145870523515 | 1 | 1 |
+| Table 2 | all_studies_std_error | 0.004 | 0.00354595479723342 | 0.00354595479723342 | 1 | 1 |
+| Table 2 | all_studies_conf_low | 0.011 | 0.0114715150118506 | 0.01147151501185061 | 1 | 1 |
+| Table 2 | all_studies_conf_high | 0.025 | 0.02537140239861967 | 0.02537140239861968 | 1 | 1 |
+| Table 2 | all_studies_n_studies | 67 | 67 | 67 | 1 | 1 |
+| Figure 2 | black_cand_estimate_pp | 0.9 | 0.924095993624055 | 0.924095993624055 | 1 | 1 |
+| Figure 2 | black_cand_se_pp | 0.4 | 0.403949584944996 | 0.403949584944996 | 1 | 1 |
+| Figure 2 | white_cand_estimate_pp | 2.2 | 2.243283459448613 | 2.243283459448615 | 1 | 1 |
+| Figure 2 | white_cand_se_pp | 0.7 | 0.704882012460991 | 0.704882012460991 | 1 | 1 |
+| Figure 2 | n_studies | 16 | 16 | 16 | 1 | 1 |
+| Figure 2 | diff_in_cates_pvalue | 0.104 | 0.10442580239427804 | 0.1044258023942776 | 1 | 1 |
+| Figure 3 | female_resp_estimate_pp | 3.0 | 3.005785735908717 | 3.0057857359087192 | 1 | 1 |
+| Figure 3 | female_resp_se_pp | 0.5 | 0.532093754832003 | 0.532093754832003 | 1 | 1 |
+| Figure 3 | male_resp_estimate_pp | 0.9 | 0.85476192509097 | 0.85476192509097 | 1 | 1 |
+| Figure 3 | male_resp_se_pp | 0.5 | 0.509847917506916 | 0.509847917506916 | 1 | 1 |
+| Figure 3 | n_studies_in_figure | 37 | 37 | 37 | 1 | 1 |
+| Figure 3 | n_studies_in_text | 36 | 37 | 37 | 0 | 0 |
+| Figure 3 | diff_in_cates_pvalue | 0.004 | 0.0035127926564261 | 0.00351279265642609 | 1 | 1 |
+| Figure 4 | dem_resp_estimate_pp | 4.2 | 4.154259026957203 | 4.154259026957201 | 1 | 1 |
+| Figure 4 | dem_resp_se_pp | 0.8 | 0.799277010412441 | 0.799277010412441 | 1 | 1 |
+| Figure 4 | ind_resp_estimate_pp | 3.3 | 3.276867581970807 | 3.2768675819708095 | 1 | 1 |
+| Figure 4 | ind_resp_se_pp | 0.8 | 0.804774319348512 | 0.8047743193485131 | 1 | 1 |
+| Figure 4 | rep_resp_estimate_pp | -1.4 | -1.417655835707809 | -1.417655835707809 | 1 | 1 |
+| Figure 4 | rep_resp_se_pp | 0.4 | 0.363468843734238 | 0.363468843734238 | 1 | 1 |
+| Figure 4 | n_studies | 20 | 20 | 20 | 1 | 1 |
+| Figure A.1 | n_cates | 954 | 954 | 954 | 1 | 1 |
+| Figure A.1 | prop_cates_positive | 0.5 | 0.69916142557652 | 0.69916142557652 | 1 | 1 |
+| Figure A.1 | n_attribute_studies | 44 | 44 | 44 | 1 | 1 |
+| Table A.1 | n_studies_listed | 43 | 44 | 44 | 0 | 0 |
 
 Every quantity the article states, against the deposit and the rewrite
 (78 rows).
@@ -612,8 +615,8 @@ in anything the code computes.
 | forcats    | 1.0.1   |
 | ggplot2    | 4.0.3   |
 | here       | 1.0.2   |
-| kableExtra | 1.4.0   |
-| knitr      | 1.51    |
+| kableExtra | 1.4.1   |
+| knitr      | 1.52    |
 | lubridate  | 1.9.5   |
 | purrr      | 1.2.2   |
 | readr      | 2.2.0   |
@@ -624,4 +627,4 @@ in anything the code computes.
 
 Packages loaded when this report was rendered.
 
-Rendered under R version 4.6.1 (2026-06-24) on macOS Tahoe 26.6.2.
+Rendered under R version 4.6.2 (2026-10-29) on macOS Tahoe 26.6.2.

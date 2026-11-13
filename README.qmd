@@ -35,8 +35,8 @@ latex_out <- knitr::is_latex_output()
 latex_only <- function(k, f) if (latex_out) f(k) else k
 
 gt <- read_csv(here::here("ground_truth", "schwarz_coppock_2022_ground_truth.csv"),
-               col_types = cols(.default = col_character(), match = col_integer(),
-                                match_rewrite = col_integer()))
+               col_types = cols(.default = col_character(), match = col_logical(),
+                                match_rewrite = col_logical()))
 claims <- read_csv(here::here("ground_truth", "published_claims_reproduction.csv"),
                    col_types = cols(.default = col_character(),
                                     match_rewrite = col_integer()))
@@ -105,20 +105,20 @@ That fetches the deposit, verifies its `r nrow(manifest)` files, and produces ev
 ```{r summary_setup, include=FALSE}
 n_claims <- nrow(gt)
 n_verifiable <- sum(!is.na(gt$match))
-n_match <- sum(gt$match == 1, na.rm = TRUE)
-n_fail <- sum(gt$match == 0, na.rm = TRUE)
+n_match <- sum(gt$match, na.rm = TRUE)
+n_fail <- sum(!gt$match, na.rm = TRUE)
 n_unverifiable <- sum(is.na(gt$match))
-n_rewrite_match <- sum(gt$match_rewrite == 1, na.rm = TRUE)
+n_rewrite_match <- sum(gt$match_rewrite, na.rm = TRUE)
 
 n_published <- nrow(claims)
 n_published_reproduced <- sum(claims$match_rewrite == 1, na.rm = TRUE)
 n_published_disagree <- sum(claims$match_rewrite == 0, na.rm = TRUE)
 n_published_no_counterpart <- sum(is.na(claims$match_rewrite))
 is_plotted_label <- str_detect(claims$claim_id, " :: (estimate|std_error)$")
-n_figure_cells <- sum(claims$location %in% c("figure_1", "figure_2", "figure_3", "figure_4") &
+n_figure_cells <- sum(claims$location %in% c("Figure 1", "Figure 2", "Figure 3", "Figure 4") &
                         is_plotted_label)
-n_appendix_cells <- sum(str_detect(claims$location, "^figure_a\\d+$") & is_plotted_label)
-n_table_1_cells <- sum(claims$location == "table_1")
+n_appendix_cells <- sum(str_detect(claims$location, "^Figure A\\.\\d+$") & is_plotted_label)
+n_table_1_cells <- sum(claims$location == "Table 1")
 ```
 
 Two questions, answered before the detail.
@@ -243,12 +243,12 @@ The article states only that "the Republican estimate is statistically significa
 
 ```{r gt_summary}
 gt |>
-  count(table_figure, match) |>
-  mutate(match = case_when(match == 1 ~ "Reproduces",
-                           match == 0 ~ "Does not reproduce",
-                           TRUE ~ "Not stated in the article")) |>
+  count(location, match) |>
+  mutate(match = case_when(match %in% TRUE ~ "Reproduces",
+                           match %in% FALSE ~ "Does not reproduce",
+                           .default = "Not stated in the article")) |>
   pivot_wider(names_from = match, values_from = n, values_fill = 0) |>
-  rename(`Table or figure` = table_figure) |>
+  rename(`Table or figure` = location) |>
   kable(booktabs = TRUE,
         caption = paste0("Ground truth: ", n_claims,
                          " recorded quantities, by where the article states them.")) |>
@@ -261,8 +261,8 @@ The article's own side of the comparison is exhaustive and lives separately, in 
 
 ```{r gt_failures}
 gt |>
-  filter(match == 0) |>
-  select(table_figure, claim, value_paper, value_script, notes) |>
+  filter(match %in% FALSE) |>
+  select(location, claim, value_paper, value_script, notes) |>
   kable(booktabs = TRUE, digits = 3,
         col.names = c("Table or figure", "Claim", "Article", "Deposit", "Note"),
         caption = paste0("The ", n_fail,
@@ -294,15 +294,22 @@ claims |>
 Two instruments read those claims against the pipeline, by separate paths from the same outputs. `ground_truth/build_ground_truth.R` writes `ground_truth/published_claims_reproduction.csv`, which puts the pipeline's value beside every published one; `maintained/in_text_claims.R` prints each number beneath the sentence that states it, quoted verbatim. Where one parses the label a plot or a table actually draws, the other formats the estimate behind it. The build runs the claims file, counts what it prints against the extraction, and stops if the two instruments disagree anywhere, so neither can quietly stop checking.
 
 ```{r claims_coverage}
+# Rows are ordered by the section or float each claim id names, which is the order the
+# claims were extracted in.
 claims |>
-  mutate(location = if_else(str_detect(location, "^figure_a([2-9]|[1-4][0-9])$"),
-                            "figure_a2 to figure_a45", location)) |>
-  summarize(Claims = n(),
+  mutate(
+    appendix_figure = str_detect(location, "^Figure A\\.([2-9]|[1-4][0-9])$"),
+    location = if_else(appendix_figure, "Figures A.2 to A.45", location),
+    key = if_else(appendix_figure, "figure_a2", str_split_i(claim_id, fixed(" :: "), 1))
+  ) |>
+  summarize(key = first(key),
+            Claims = n(),
             Reproduces = sum(match_rewrite == 1, na.rm = TRUE),
             `Does not` = sum(match_rewrite == 0, na.rm = TRUE),
             `No counterpart` = sum(is.na(match_rewrite)),
             .by = location) |>
-  arrange(location) |>
+  arrange(key) |>
+  select(-key) |>
   rename(`Where the article prints it` = location) |>
   kable(booktabs = TRUE,
         caption = "Published numbers against the deposit, by where the article prints them.") |>
@@ -413,13 +420,13 @@ include_graphics(here::here("maintained", "output",
 gt |>
   filter(!is.na(match)) |>
   transmute(
-    `Table or figure` = table_figure,
+    `Table or figure` = location,
     Claim = claim,
     Article = value_paper,
     Deposit = value_script,
     Rewrite = value_rewrite,
-    `Deposit matches` = match,
-    `Rewrite matches` = match_rewrite
+    `Deposit matches` = as.integer(match),
+    `Rewrite matches` = as.integer(match_rewrite)
   ) |>
   kable(booktabs = TRUE, digits = 3, longtable = latex_out,
         caption = paste0("Every quantity the article states, against the deposit and the rewrite (",

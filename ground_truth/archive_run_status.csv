@@ -1,0 +1,11 @@
+pass,script,role,exit_status,outcome,stopped_at
+as_shipped,meta_analyze_sates.R,analysis,0,clean,NA
+as_shipped,meta_analyze_cates_cand_attributes.R,analysis,0,clean,NA
+as_shipped,meta_analyze_cates_cand_race.R,analysis,0,clean,NA
+as_shipped,meta_analyze_cates_resp_gender.R,analysis,0,clean,NA
+as_shipped,meta_analyze_cates_resp_pid.R,analysis,0,clean,NA
+stripped,meta_analyze_sates.R,analysis,0,clean,NA
+stripped,meta_analyze_cates_cand_attributes.R,analysis,0,clean,NA
+stripped,meta_analyze_cates_cand_race.R,analysis,0,clean,NA
+stripped,meta_analyze_cates_resp_gender.R,analysis,0,clean,NA
+stripped,meta_analyze_cates_resp_pid.R,analysis,0,clean,NA

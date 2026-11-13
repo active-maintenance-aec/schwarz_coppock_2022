@@ -695,5 +695,7 @@ stopifnot(
   all(entries$form %in% c("full", "brief", "note")),
   all(entries$source %in% c("pipeline", "reading", "reference_audit", "publisher_record", "authors_archive", "proof"))
 )
-write_csv(select(entries, -any_of("values_in_spans")), here("errata_entries.csv"))
+# values_in_spans is written as the spine's last column, one logical per entry.
+stopifnot(identical(tail(names(entries), 1), "values_in_spans"))
+write_csv(entries, here("errata_entries.csv"))
 ```
